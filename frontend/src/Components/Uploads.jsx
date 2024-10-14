@@ -22,7 +22,13 @@ const Uploads = ({ userDetails }) => {
             >
               <div>
                 <span className="font-medium">{file.title}</span>
-                <p className="text-sm text-gray-500">{new Date(file.uploadedAt).toLocaleDateString(undefined, {year: 'numeric', month: 'long', day: 'numeric'})}</p>
+                <p className="text-sm text-gray-500">
+                  {new Date(file.uploadedAt).toLocaleDateString(undefined, {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })}
+                </p>
               </div>
               <button
                 onClick={() => handleView(file.url)}

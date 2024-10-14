@@ -15,9 +15,16 @@ const userSchema = new Schema(
       enum: ["student", "admin"],
       required: true,
     },
+    ratingsGiven: [
+      {
+        document: { type: mongoose.Schema.Types.ObjectId, ref: "SubjectMaterial" },
+        rating: { type: Number, min: 1, max: 5 },
+      },
+    ], // New field to track ratings given by the user
   },
   { timestamps: true }
 );
+
 
 // Create a model from the schema
 const User = mongoose.model("User", userSchema); // Best practice is to use singular model names

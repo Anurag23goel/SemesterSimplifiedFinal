@@ -10,6 +10,7 @@ import Cookies from "js-cookie";
 import { Toaster } from "react-hot-toast";
 import Dialog from "@mui/material/Dialog"; // Material UI Dialog component
 import LoginForm from "../Components/LoginForm"; // Assuming you have a LoginForm component
+import RatingComponent from "../Components/RatingComponent";
 
 const SubjectPage = () => {
   const [relatedSubjects, setRelatedSubjects] = useState([]);
@@ -24,6 +25,7 @@ const SubjectPage = () => {
   const subject = queryParams.get("subject");
 
   // Function to handle filter button click
+
   const filterButtonHandler = (e) => {
     const selectedCategory = e.target.value;
     const filteredData =
@@ -54,6 +56,9 @@ const SubjectPage = () => {
           withCredentials: true,
         }
       );
+
+      console.log(response.data);
+      
 
       setAllData(response.data); // Store all documents
       setDataToRender(response.data); // Initially render all documents
@@ -86,7 +91,6 @@ const SubjectPage = () => {
   const handleCloseDialog = () => {
     setOpenLoginDialog(false);
   };
-
 
   useEffect(() => {
     fetchData();
@@ -191,23 +195,34 @@ const SubjectPage = () => {
                   key={index}
                   className="flex items-center justify-between p-4 border border-gray-300 rounded-lg shadow hover:bg-gray-100 transition duration-200"
                 >
-                  <div className="flex items-center">
-                    <FaBook size={40} className="text-blue-500 mr-4" />
-                    <div className="flex flex-col">
-                      <span className="font-medium">{doc.title}</span>
-                      <span className="text-sm text-gray-500">
-                        {doc.uploadedBy}
-                      </span>
+                  <div className="flex items-center justify-between w-full">
+                    <div className="flex items-center">
+                      <FaBook
+                        size={40}
+                        className="text-blue-500 mr-4 hover:cursor-pointer"
+                        onClick={() => handleOpenPdf(doc.url)}
+                      />
+                      <div className="flex flex-col">
+                        <span
+                          className="font-medium hover:cursor-pointer"
+                          onClick={() => handleOpenPdf(doc.url)}
+                        >
+                          {doc.title}
+                        </span>
+                        <span className="text-sm text-gray-500">
+                          {doc.uploadedBy}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Move the star rating to the right side */}
+                    <div className="mt-2">
+                      <RatingComponent
+                        documentId={doc._id}
+                        currentAverage={doc.averageRating}
+                      />
                     </div>
                   </div>
-
-                  {/* Button to open PDF in a new tab */}
-                  <button
-                    onClick={() => handleOpenPdf(doc.url)} // Call handler to open PDF
-                    className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-200"
-                  >
-                    Open PDF
-                  </button>
                 </div>
               ))
             ) : (

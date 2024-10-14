@@ -1,8 +1,21 @@
-import React from "react";
+import React, { useEffect } from "react";
 import LoginForm from "../Components/LoginForm";
 import mainLogo from "../assets/mainlogo.jpeg";
+import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 
 const LoginPage = () => {
+
+  const navigate = useNavigate()
+
+  const userID = Cookies.get("userid")
+  
+  useEffect(() => {
+    if(userID){
+      navigate('/')
+    }
+  })
+
   return (
     <div className="min-h-screen flex flex-col overflow-hidden">
       {/* Wrapper to center the form and image */}

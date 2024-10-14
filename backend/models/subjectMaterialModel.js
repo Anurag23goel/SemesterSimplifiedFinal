@@ -30,19 +30,30 @@ const subjectDocs = new mongoose.Schema(
     uploadedBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required:true
+      required: true,
     },
-    university:{
-      type:String,
-      required:true
+    university: {
+      type: String,
+      required: true,
     },
     uploadedAt: {
       type: Date,
       default: Date.now,
     },
+    ratings: [
+      {
+        user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+        rating: { type: Number, min: 1, max: 5 },
+      },
+    ], // Array of ratings from users
+    averageRating: {
+      type: Number,
+      default: 0,
+    }, // Calculated average rating
   },
   { timestamps: true }
 );
+
 
 const SubjectMaterial = mongoose.model("SubjectMaterial", subjectDocs);
 

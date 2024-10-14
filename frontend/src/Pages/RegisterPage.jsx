@@ -1,11 +1,22 @@
-import React from "react";
+import React, { useEffect } from "react";
 import RegisterForm from "../Components/RegisterForm";
 import mainLogo from "../assets/mainlogo.jpeg";
+import { useNavigate } from "react-router-dom";
 
+import Cookies from "js-cookie";
 
 const RegisterPage = () => {
-  
-  return(
+  const navigate = useNavigate();
+
+  const userID = Cookies.get("userid");
+
+  useEffect(() => {
+    if (userID) {
+      navigate("/");
+    }
+  });
+
+  return (
     <div className="min-h-screen flex flex-col overflow-hidden">
       {/* Wrapper to center the form and image */}
       <div className="flex flex-1 items-center justify-center">
@@ -26,8 +37,7 @@ const RegisterPage = () => {
         </div>
       </div>
     </div>
-  )
-
+  );
 };
 
 export default RegisterPage;
