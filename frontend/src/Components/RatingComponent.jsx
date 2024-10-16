@@ -20,7 +20,7 @@ const RatingComponent = ({
   const handleRatingSubmit = async (newRating) => {
     if (newRating === 0) return; // Prevent submitting a rating of 0
 
-    const userID = Cookies.get('userId')
+    const userID = Cookies.get('userid')
 
     if(!userID){
       toast.error("You Must Login To Rate")

@@ -30,6 +30,9 @@ const NavBar = () => {
         <li className="hover:text-blue-500 transition-all duration-300 ease-in-out cursor-pointer">
           <NavLink to="/">Home</NavLink>
         </li>
+        {
+          isLogin && (<NavLink to={`/community`}><li>Community</li></NavLink>)
+        }
         <li className="hover:text-blue-500 transition-all duration-300 ease-in-out cursor-pointer">
           <NavLink to="/about">About Us</NavLink>
         </li>

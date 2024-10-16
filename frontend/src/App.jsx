@@ -5,6 +5,7 @@ import RegisterPage from "./Pages/RegisterPage";
 import SubjectPage from "./Pages/SubjectPage";
 import UploadPage from "./Pages/UploadPage";
 import DashboardPage from "./Pages/DashboardPage";
+import ChatPage from "./Pages/ChatPage";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Route path="/search" element={<SubjectPage />}/>
         <Route path="/upload" element={<UploadPage />}/>
         <Route path="/profile" element={<DashboardPage />}/>
+        <Route path="/community" element={<ChatPage />}/>
       </Routes>
     </div>
   );

@@ -12,7 +12,13 @@ const SidePanel = ({ activeTab, setActiveTab, userDetails }) => {
     navigate("/"); // Redirect to home page after logging out
   };
 
-  const menuItems = ["Account", "Uploads", "Connections"];
+  const menuItems = [
+    "Home",
+    "Community",
+    "Account",
+    "My Uploads",
+    "Connections",
+  ];
 
   return (
     <div className="w-64 bg-blue-800 text-white flex flex-col h-full">

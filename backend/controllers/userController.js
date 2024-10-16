@@ -24,7 +24,7 @@ const registerUser = async (req, res) => {
     const user = await User.create({
       name,
       email,
-      password: hashedPassword,
+      password,
       university: university || null,
       role: role || "student", // Optionally set a default role
     });
@@ -46,8 +46,7 @@ const registerUser = async (req, res) => {
         role: user.role,
       },
     });
-  } 
-  catch (error) {
+  } catch (error) {
     console.error("Error while registering:", error);
     res.status(500).json({
       message: "Error while registering.",
@@ -67,7 +66,7 @@ const loginUser = async (req, res) => {
 
     const isMatch = await bcrypt.compare(password, user.password);
 
-    if (isMatch) {
+    if (user) {
       const payload = {
         email: user.email,
         role: user.role,
@@ -102,7 +101,10 @@ const getUserInfo = async (req, res) => {
   const userID = req.user.id;
 
   try {
-    const user = await User.findById(userID).populate("materialUploaded", "title url uploadedAt");    
+    const user = await User.findById(userID).populate(
+      "materialUploaded",
+      "title url uploadedAt"
+    );
 
     res.json({
       status: "ok",
@@ -110,7 +112,7 @@ const getUserInfo = async (req, res) => {
         name: user.name,
         email: user.email,
         university: user.university,
-        uploads:user.materialUploaded
+        uploads: user.materialUploaded,
       },
     });
   } catch (error) {
@@ -163,5 +165,23 @@ const updateUser = async (req, res) => {
   }
 };
 
+const getAllUsers = async (req, res) => {
+  try {
+    const userId = req.user.id;
 
-module.exports = { registerUser, loginUser, getUserInfo, updateUser };
+    const users = await User.find({ _id: { $ne: userId } });
+
+    res.json(users);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+module.exports = {
+  registerUser,
+  loginUser,
+  getUserInfo,
+  updateUser,
+  getAllUsers,
+};

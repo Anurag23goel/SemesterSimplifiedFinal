@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Account from "../Components/Account";
-import Uploads from "../Components/Uploads";
+import MyUploads from "../Components/Uploads";
 import Connections from "../Components/Connections";
 import SidePanel from "../Components/SidePanel";
+import { Navigate } from "react-router-dom";
 
 const DashboardPage = () => {
   const [activeTab, setActiveTab] = useState("Account");
@@ -32,10 +33,14 @@ const DashboardPage = () => {
 
   const renderContent = () => {
     switch (activeTab) {
+      case "Home":
+        return <Navigate to="/" />; // Redirect to home page
+      case "Community":
+        return <Navigate to="/community" />; // Redirect to home page
       case "Account":
         return <Account userDetails={userDetails} />;
-      case "Uploads":
-        return <Uploads userDetails={userDetails} />;
+      case "My Uploads":
+        return <MyUploads userDetails={userDetails} />;
       case "Connections":
         return <Connections userDetails={userDetails} />;
       default:

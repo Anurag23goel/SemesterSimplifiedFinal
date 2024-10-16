@@ -1,7 +1,7 @@
 // src/components/Uploads.js
 import React from "react";
 
-const Uploads = ({ userDetails }) => {
+const MyUploads = ({ userDetails }) => {
   const handleView = (url) => {
     if (url) {
       window.open(url, "_blank", "noopener,noreferrer");
@@ -46,4 +46,4 @@ const Uploads = ({ userDetails }) => {
   );
 };
 
-export default Uploads;
+export default MyUploads;

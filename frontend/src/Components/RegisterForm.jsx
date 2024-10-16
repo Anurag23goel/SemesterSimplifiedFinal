@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { FaEye, FaEyeSlash, FaLock, FaKey } from "react-icons/fa";
 import { IoPersonSharp } from "react-icons/io5";
 import { IoIosMail } from "react-icons/io";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -17,6 +17,7 @@ const RegisterForm = () => {
     confirmPassword: "",
     terms: false,
   });
+  const navigate = useNavigate()
 
   const changeHandler = (event) => {
     const { name, type, checked, value } = event.target;
@@ -58,6 +59,7 @@ const RegisterForm = () => {
           confirmPassword: "",
           terms: false,
         });
+        navigate("/login");
       } else {
         toast.error("Failed to create user.");
       }
