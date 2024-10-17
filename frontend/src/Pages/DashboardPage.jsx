@@ -5,8 +5,20 @@ import MyUploads from "../Components/Uploads";
 import Connections from "../Components/Connections";
 import SidePanel from "../Components/SidePanel";
 import { Navigate } from "react-router-dom";
+import Cookies from "js-cookie";
+import SentRequests from "../Components/SentRequests";
+import IncomingRequests from "../Components/IncomingRequests";
 
 const DashboardPage = () => {
+  
+  
+  useEffect(() => {
+    const token = Cookies.get("userToken");
+    if (!token) {
+      window.location.href = "/";
+    }
+  }, []);
+
   const [activeTab, setActiveTab] = useState("Account");
   const [userDetails, setuserDetails] = useState({
     username: "",
@@ -21,7 +33,7 @@ const DashboardPage = () => {
     });
 
     const userDetails = res.data.user;
-    // console.log(userDetails);
+    console.log(userDetails);
 
     setuserDetails({
       username: userDetails.name,
@@ -43,6 +55,10 @@ const DashboardPage = () => {
         return <MyUploads userDetails={userDetails} />;
       case "Connections":
         return <Connections userDetails={userDetails} />;
+        case"Incoming Requests":
+        return <IncomingRequests />;
+        case"Requests Sent":
+        return <SentRequests />;
       default:
         return <Account userDetails={userDetails} />;
     }

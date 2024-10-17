@@ -14,13 +14,10 @@ const getData = async (req, res) => {
       "name"
     );
 
-    console.log(data);
-    
-
     const responseData = data.map((doc) => {
       return {
         ...doc.toObject(),
-        uploadedBy: doc.uploadedBy.name,  //Replace ObjectId with user name
+        uploadedBy: doc.uploadedBy.name, //Replace ObjectId with user name
       };
     });
 
@@ -150,4 +147,9 @@ const getDocumentByIdForRating = async (req, res) => {
   }
 };
 
-module.exports = { getData, uploadFile, rateDocument, getDocumentByIdForRating };
+module.exports = {
+  getData,
+  uploadFile,
+  rateDocument,
+  getDocumentByIdForRating,
+};

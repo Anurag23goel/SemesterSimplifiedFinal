@@ -1,20 +1,19 @@
 import React, { useEffect } from "react";
 import RegisterForm from "../Components/RegisterForm";
 import mainLogo from "../assets/mainlogo.jpeg";
-import { useNavigate } from "react-router-dom";
 
 import Cookies from "js-cookie";
 
 const RegisterPage = () => {
-  const navigate = useNavigate();
-
-  const userID = Cookies.get("userid");
-
+  
+  
   useEffect(() => {
-    if (userID) {
-      navigate("/");
+    const token = Cookies.get("userToken");
+    if (token) {
+      window.location.href = "/";
     }
-  });
+  }, []);
+
 
   return (
     <div className="min-h-screen flex flex-col overflow-hidden">

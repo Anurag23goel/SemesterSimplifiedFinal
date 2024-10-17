@@ -6,6 +6,7 @@ import SubjectPage from "./Pages/SubjectPage";
 import UploadPage from "./Pages/UploadPage";
 import DashboardPage from "./Pages/DashboardPage";
 import ChatPage from "./Pages/ChatPage";
+import CommunityPage from "./Pages/CommunityPage";
 
 function App() {
   return (
@@ -17,7 +18,8 @@ function App() {
         <Route path="/search" element={<SubjectPage />}/>
         <Route path="/upload" element={<UploadPage />}/>
         <Route path="/profile" element={<DashboardPage />}/>
-        <Route path="/community" element={<ChatPage />}/>
+        <Route path="/community" element={<CommunityPage />}/>
+        <Route path="/community/Chat" element={<ChatPage />}/>
       </Routes>
     </div>
   );

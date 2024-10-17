@@ -18,6 +18,8 @@ const SidePanel = ({ activeTab, setActiveTab, userDetails }) => {
     "Account",
     "My Uploads",
     "Connections",
+    "Incoming Requests",
+    "Requests Sent"
   ];
 
   return (
@@ -25,11 +27,11 @@ const SidePanel = ({ activeTab, setActiveTab, userDetails }) => {
       {/* User Info Section */}
       <div className="flex flex-col items-center p-6 border-b border-blue-700">
         <img
-          src={userDetails.profilePicture}
+          src="https://avatar.iran.liara.run/public/boy?username=Ash"
           alt="Profile"
           className="w-24 h-24 rounded-full mb-4 object-cover"
         />
-        <h3 className="text-xl font-semibold">{userDetails.name}</h3>
+        <h3 className="text-xl font-semibold">{userDetails.username}</h3>
         <p className="text-sm">{userDetails.university}</p>
       </div>
 

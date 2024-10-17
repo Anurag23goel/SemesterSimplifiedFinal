@@ -11,12 +11,19 @@ const privateMessageSchema = new mongoose.Schema({
   },
   content: {
     type: String,
+    required: true,
   },
+  mediaPath: {
+    type: String,
+  }, // Add mediaPath to schema
   delivered: {
     type: Boolean,
     default: false,
   },
-  timestamp: { type: Date, default: Date.now },
+  timestamp: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
 const groupMessageSchema = new mongoose.Schema({
@@ -39,6 +46,7 @@ const groupMessageSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  mediaPath: { type: String }, // Add mediaPath to schema
 });
 
 const GroupMessage = mongoose.model("GroupMessage", groupMessageSchema);

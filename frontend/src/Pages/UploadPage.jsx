@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { storage } from "../firebase"; // Adjust the path as necessary
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import axios from "axios";
@@ -6,10 +6,18 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { data } from "../assets/Suggestions"; // Import your degree and subjects data
 import { UniversitiesList } from "../assets/UniversitiesList";
+import Cookies from "js-cookie";
 
 const UploadPage = () => {
   const [file, setFile] = useState(null);
   const [uploading, setUploading] = useState(false);
+
+  useEffect(() => {
+    const token = Cookies.get("userToken");
+    if (!token) {
+      window.location.href = "/";
+    }
+  }, []);
 
   // Form data state
   const [formData, setFormData] = useState({

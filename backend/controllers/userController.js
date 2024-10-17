@@ -3,6 +3,7 @@ const User = require("../models/userModel");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken"); // Ensure you have this installed
 require("dotenv").config();
+const ConnectionRequest = require("../models/connectionRequestModel");
 
 const registerUser = async (req, res) => {
   const { name, email, password, university, role } = req.body;
@@ -25,7 +26,7 @@ const registerUser = async (req, res) => {
       name,
       email,
       password,
-      university: university || null,
+      university: university || "",
       role: role || "student", // Optionally set a default role
     });
 
@@ -165,13 +166,144 @@ const updateUser = async (req, res) => {
   }
 };
 
+const getAllConnections = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const user = await User.findOne({ _id: userId }).populate("connections");
+
+    const userConnections = user.connections || [];
+    // console.log(userConnections);
+
+    res.json(userConnections);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
 const getAllUsers = async (req, res) => {
   try {
     const userId = req.user.id;
 
-    const users = await User.find({ _id: { $ne: userId } });
+    // Fetch the current user's connections
+    const currentUser = await User.findById(userId).select("connections");
+    const myConnections = currentUser.connections.map((conn) =>
+      conn.toString()
+    );
 
+    // Find all pending connection requests sent by the current user
+    const connectionReq = await ConnectionRequest.find({
+      senderId: userId,
+      status: "pending",
+    });
+
+    // Get an array of all receiver IDs from the connection requests
+    const usersAlreadyRequested = connectionReq.map((singleReq) =>
+      singleReq.receiverId.toString()
+    );
+
+    // Combine connections and already requested users into one list to exclude
+    const usersToExclude = [...myConnections, ...usersAlreadyRequested, userId];
+
+    // Find all users except the ones in the usersToExclude list
+    const users = await User.find({
+      _id: { $nin: usersToExclude }, // Exclude connections, users with pending requests, and the current user
+    }).select("-password -ratingsGiven");
+
+    // Send response with the list of users
     res.json(users);
+  } catch (error) {
+    console.error("Error fetching users: ", error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+const getAllRequests = async (req, res) => {
+  const userId = req.user.id;
+
+  try {
+    const incomingReq = await ConnectionRequest.find({
+      receiverId: userId,
+      status: "pending",
+    }).populate("senderId", "name university");
+
+    const outgoingReq = await ConnectionRequest.find({
+      senderId: userId,
+      status: "pending",
+    }).populate("receiverId", "name university");
+
+    res.json({ incomingReq, outgoingReq });
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+const sendConnectionRequest = async (req, res) => {
+  const receiver = req.query.user;
+  const sender = req.user.id;
+
+  try {
+    const newConnectionReq = await ConnectionRequest.create({
+      senderId: sender,
+      receiverId: receiver,
+      status: "pending",
+    });
+
+    if (newConnectionReq) {
+      res.json({
+        status: "ok",
+        message: "Connection request sent successfully",
+      });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+const acceptConnectionRequest = async (req, res) => {
+  const receiver = req.user.id; // Current logged-in user (receiver)
+  const reqId = req.query.requestId; // ID of the request
+
+  try {
+    // Check if the request exists and is still pending
+    const request = await ConnectionRequest.findOne({
+      _id: reqId,
+      receiverId: receiver,
+      status: "pending",
+    });
+
+    if (!request) {
+      return res
+        .status(404)
+        .json({ message: "Request not found or already handled" });
+    }
+
+    // Update the status of the connection request to "accepted"
+    await ConnectionRequest.findByIdAndUpdate(reqId, {
+      status: "accepted",
+    });
+
+    // Add the sender to the receiver's connections
+    await User.findByIdAndUpdate(
+      receiver,
+      { $push: { connections: request.senderId } },
+      { new: true }
+    );
+
+    // Add the receiver to the sender's connections
+    await User.findByIdAndUpdate(
+      request.senderId,
+      { $push: { connections: receiver } },
+      { new: true }
+    );
+
+    // Return success response
+    res.json({
+      status: "ok",
+      message: "Connection request accepted successfully",
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error" });
@@ -184,4 +316,8 @@ module.exports = {
   getUserInfo,
   updateUser,
   getAllUsers,
+  getAllConnections,
+  sendConnectionRequest,
+  acceptConnectionRequest,
+  getAllRequests,
 };

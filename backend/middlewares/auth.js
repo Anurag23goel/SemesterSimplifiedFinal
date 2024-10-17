@@ -3,6 +3,7 @@ require("dotenv").config();
 
 exports.authentication = async (req, res, next) => {
   const token = req.cookies.userToken;
+  
 
   // Check if the token is present
   if (!token) {

@@ -1,13 +1,34 @@
 // src/components/Connections.js
-import React from 'react';
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 
 const Connections = () => {
-  // Dummy connections data; replace with real data as needed
-  const connections = [
-    { id: 1, name: 'Jane Smith', university: 'ABC University' },
-    { id: 2, name: 'Bob Johnson', university: 'DEF College' },
-    // Add more connections as necessary
-  ];
+
+  const [connections, setConnections] = useState([]);
+
+  const fetchConnections = async () => {
+    try {
+      const res = await axios.get(
+        "http://localhost:5000/api/v1/user/getConnections",
+        {
+          withCredentials: true,
+        }
+      );
+
+      const connectionsList = res.data || []; // Get connections from response
+
+      console.log(connectionsList);
+
+      // Set connections state
+      setConnections((prev) => [...prev, ...connectionsList]);
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+
+  useEffect(() => {
+    fetchConnections();
+  }, []);
 
   return (
     <div className="bg-white p-6 rounded shadow">
@@ -16,7 +37,7 @@ const Connections = () => {
         {connections.map((conn) => (
           <li key={conn.id} className="flex items-center p-4 border rounded">
             <img
-              src={`https://via.placeholder.com/40?text=${conn.name.charAt(0)}`}
+              src="https://avatar.iran.liara.run/public/boy?username=Ash"
               alt={conn.name}
               className="w-10 h-10 rounded-full mr-4"
             />

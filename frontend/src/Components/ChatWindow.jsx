@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { FaPaperPlane, FaUserCircle } from 'react-icons/fa'; // Import icons from react-icons
 
 const ChatWindow = ({ currentChatPartner, loggedInUserId, socket }) => {
   const [messages, setMessages] = useState([]);
@@ -62,56 +63,46 @@ const ChatWindow = ({ currentChatPartner, loggedInUserId, socket }) => {
   };
 
   return (
-    <div className="flex-1 p-4 flex flex-col">
+    <div className="flex-1 p-4 flex flex-col bg-gray-50 shadow-lg rounded-lg">
       <h2 className="text-xl font-semibold mb-4">
         Chat with {currentChatPartner.name}
       </h2>
-      <div className="flex-1 overflow-y-auto border border-gray-300 p-4 rounded-lg mb-4">
+      <div className="flex-1 overflow-y-auto border border-gray-300 p-4 rounded-lg bg-white mb-4 shadow-inner">
         {messages.map((object, index) => (
-          <div
-            key={index}
-            className={`mb-2 ${
-              (object.senderId || object.sender._id) === loggedInUserId
-                ? "text-right"
-                : "text-left"
-            }`}
-          >
-            <strong
-              className={
-                (object.senderId || object.sender._id) === loggedInUserId
-                  ? "text-blue-600"
-                  : "text-black"
-              }
-            >
-              {(object.senderId || object.sender._id) === loggedInUserId
-                ? "Me: "
-                : `${currentChatPartner.name}: `}
-            </strong>
-            <span
-              className={
-                (object.senderId || object.sender._id) === loggedInUserId
-                  ? "text-blue-600"
-                  : "text-gray-800"
-              }
-            >
-              {object.content}
-            </span>
+          <div key={index} className={`flex items-start mb-2 ${ (object.senderId || object.sender._id) === loggedInUserId ? 'justify-end' : 'justify-start'}`}>
+            {(object.senderId || object.sender._id) === loggedInUserId ? (
+              <div className="flex items-center">
+                <FaUserCircle className="text-gray-400 mr-2" size={32} />
+                <div className="bg-blue-500 text-white p-2 rounded-lg max-w-xs">
+                  <strong>Me:</strong> {object.content}
+                </div>
+              </div>
+            ) : (
+              <div className="flex items-center">
+                <FaUserCircle className="text-gray-400 mr-2" size={32} />
+                <div className="bg-gray-200 p-2 rounded-lg max-w-xs">
+                  <strong>{currentChatPartner.name}:</strong> {object.content}
+                </div>
+              </div>
+            )}
           </div>
         ))}
       </div>
 
-      <div className="flex">
+      <div className="flex items-center">
+        <FaUserCircle className="text-gray-400 mr-2" size={24} />
         <input
           type="text"
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
           placeholder="Type a message..."
-          className="flex-1 border border-gray-300 p-2 rounded-lg"
+          className="flex-1 border border-gray-300 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
         />
         <button
           onClick={sendMessage}
-          className="ml-2 bg-blue-600 text-white p-2 rounded-lg hover:bg-blue-700 transition"
+          className="ml-2 p-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition duration-200 flex items-center"
         >
+          <FaPaperPlane className="mr-1" />
           Send
         </button>
       </div>

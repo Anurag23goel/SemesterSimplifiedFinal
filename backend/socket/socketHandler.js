@@ -35,43 +35,41 @@ module.exports = (io) => {
 
     // Private messaging
     socket.on("private_message", async ({ senderId, receiverId, content }) => {
-        try {
-          const receiverSocketIds = users[receiverId] || []; // Ensure it’s an array
-          console.log(receiverSocketIds.length);
-      
-          const messageData = {
-            senderId,
-            receiverId,
-            content,
-            timestamp: new Date(),
-          };
-      
-          // Emit the message to the receiver's active sockets
-          if (receiverSocketIds.length > 0) {
-            receiverSocketIds.forEach((eachId) => {
-              io.to(eachId).emit("message", messageData);
-            });
-          } else {
-            console.log(`User ${receiverId} is not connected.`);
-          }
-      
-          // Also emit the message back to the sender
-          socket.emit("message", messageData);
-      
-          // Save the message to the database
-          await PrivateMessage.create({
-            sender: senderId,
-            receiver: receiverId,
-            content,
-            delivered: true,
+      try {
+        const receiverSocketIds = users[receiverId] || []; // Ensure it’s an array
+        console.log(receiverSocketIds.length);
+
+        const messageData = {
+          senderId,
+          receiverId,
+          content,
+          timestamp: new Date(),
+        };
+
+        // Emit the message to the receiver's active sockets
+        if (receiverSocketIds.length > 0) {
+          receiverSocketIds.forEach((eachId) => {
+            io.to(eachId).emit("message", messageData);
           });
-      
-        } catch (error) {
-          console.error("Error sending private message:", error);
-          socket.emit("error", { message: "Failed to send message." });
+        } else {
+          console.log(`User ${receiverId} is not connected.`);
         }
-      });
-      
+
+        // Also emit the message back to the sender
+        socket.emit("message", messageData);
+
+        // Save the message to the database
+        await PrivateMessage.create({
+          sender: senderId,
+          receiver: receiverId,
+          content,
+          delivered: true,
+        });
+      } catch (error) {
+        console.error("Error sending private message:", error);
+        socket.emit("error", { message: "Failed to send message." });
+      }
+    });
 
     // Join a room - for group chat
     socket.on("joinRoom", (room) => {
