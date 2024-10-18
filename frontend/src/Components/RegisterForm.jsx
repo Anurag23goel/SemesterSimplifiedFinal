@@ -42,7 +42,7 @@ const RegisterForm = () => {
 
     try {
       const res = await axios.post(
-        "http://localhost:5000/api/v1/user/register",
+        `${process.env.REACT_APP_BACKEND_URL}api/v1/user/register`,
         {
           name: formData.name,
           email: formData.email,
@@ -91,7 +91,7 @@ const RegisterForm = () => {
           name="name"
           id="name"
           value={formData.name}
-          placeholder="Enter Name"
+          placeholder="John Doe"
           onChange={changeHandler}
           className="p-3 rounded-md bg-white text-black border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
@@ -110,7 +110,7 @@ const RegisterForm = () => {
           name="email"
           id="email"
           value={formData.email}
-          placeholder="Enter Email"
+          placeholder="johndoe@example.com"
           onChange={changeHandler}
           className="p-3 rounded-md bg-white text-black border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />

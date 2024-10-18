@@ -4,6 +4,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken"); // Ensure you have this installed
 require("dotenv").config();
 const ConnectionRequest = require("../models/connectionRequestModel");
+const { connections } = require("mongoose");
 
 const registerUser = async (req, res) => {
   const { name, email, password, university, role } = req.body;
@@ -102,22 +103,47 @@ const getUserInfo = async (req, res) => {
   const userID = req.user.id;
 
   try {
-    const user = await User.findById(userID).populate(
-      "materialUploaded",
-      "title url uploadedAt"
-    );
+    const myselfUser = await User.findById(userID)
+      .populate("materialUploaded", "title url uploadedAt")
+      .populate("connections", "name university"); // Populate connections with name and university
 
     res.json({
       status: "ok",
       user: {
-        name: user.name,
-        email: user.email,
-        university: user.university,
-        uploads: user.materialUploaded,
+        name: myselfUser.name,
+        email: myselfUser.email,
+        university: myselfUser.university,
+        uploads: myselfUser.materialUploaded,
+        connections: myselfUser.connections,
       },
     });
   } catch (error) {
     console.log(error);
+    res
+      .status(500)
+      .json({ status: "error", message: "Internal server error." });
+  }
+};
+
+const getRequestedUserInfo = async (req, res) => {
+  const reqUserId = req.params.id;
+
+  // console.log(reqUserId);
+
+  try {
+    const requestedUser = await User.findById(reqUserId)
+      .populate("connections", "name university")
+      .populate("materialUploaded");
+
+    res.json({
+      status: "ok",
+      requestedUser: requestedUser,
+    });
+  } catch (error) {
+    res.json({
+      status: "error",
+      message: "Internal server error.",
+    });
   }
 };
 
@@ -320,4 +346,5 @@ module.exports = {
   sendConnectionRequest,
   acceptConnectionRequest,
   getAllRequests,
+  getRequestedUserInfo,
 };

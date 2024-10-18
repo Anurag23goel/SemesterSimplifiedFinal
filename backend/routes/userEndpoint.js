@@ -12,6 +12,7 @@ const {
   sendConnectionRequest,
   acceptConnectionRequest,
   getAllRequests,
+  getRequestedUserInfo
 } = require("../controllers/userController.js");
 
 const { authentication } = require("../middlewares/auth");
@@ -21,7 +22,7 @@ router.use(express.json());
 router.get("/getConnections", authentication, getAllConnections);
 router.get("/getAllUsers", authentication, getAllUsers);
 router.get("/getInfo", authentication, getUserInfo);
-router.get("/getConnections", authentication, getAllConnections);
+router.get("/getRequestedUserInfo/:id", authentication, getRequestedUserInfo);
 router.get("/getAllRequests", authentication, getAllRequests);
 router.post("/login", loginUser);
 router.post("/register", registerUser);

@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
 module.exports = (io) => {
-  const users = {}; // Store user socket IDs
+  const users = {}; // Store user socket IDs and online status
 
   // MIDDLEWARE
   io.use((socket, next) => {
@@ -14,7 +14,7 @@ module.exports = (io) => {
         if (err) {
           return next(new Error("Authentication error"));
         }
-        socket.userId = decoded.id;
+        socket.userId = decoded.id; // Store the user ID on the socket
         next();
       });
     } else {
@@ -23,21 +23,25 @@ module.exports = (io) => {
   });
 
   io.on("connection", (socket) => {
-    // console.log(`User(${socket.userId}) with socket ID ${socket.id} connected`);
-
     const userId = socket.userId;
+
+    // Manage user socket IDs and set online status
     if (users[userId]) {
-      users[userId].push(socket.id);
+      users[userId].socketIds.push(socket.id);
     } else {
-      users[userId] = [socket.id];
+      users[userId] = {
+        socketIds: [socket.id],
+        online: true, // User is online
+      };
     }
-    console.log(`User ${userId} connected with socket ID ${socket.id}`);
+
+    // Emit user status update
+    io.emit("userStatusUpdate", users);
 
     // Private messaging
     socket.on("private_message", async ({ senderId, receiverId, content }) => {
       try {
-        const receiverSocketIds = users[receiverId] || []; // Ensure it’s an array
-        console.log(receiverSocketIds.length);
+        const receiverSocketIds = users[receiverId]?.socketIds || []; // Ensure it’s an array
 
         const messageData = {
           senderId,
@@ -99,19 +103,22 @@ module.exports = (io) => {
 
     // Handle disconnection
     socket.on("disconnect", () => {
-      for (const [userId, socketIds] of Object.entries(users)) {
+      if (users[userId]) {
+        const socketIds = users[userId].socketIds;
         const index = socketIds.indexOf(socket.id);
         if (index !== -1) {
           socketIds.splice(index, 1);
           console.log(`Socket ${socket.id} disconnected from user ${userId}`);
 
-          // If no more socket IDs, remove the user entry
+          // If no more socket IDs, remove the user entry and set offline status
           if (socketIds.length === 0) {
             delete users[userId];
             console.log(`User ${userId} completely disconnected`);
           }
-          break;
         }
+
+        // Emit user status update
+        io.emit("userStatusUpdate", users);
       }
     });
   });

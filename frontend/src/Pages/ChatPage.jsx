@@ -2,10 +2,27 @@ import React, { useEffect, useState } from "react";
 import io from "socket.io-client";
 import axios from "axios";
 import Cookies from "js-cookie";
-import ChatWindow from "../Components/ChatWindow"; // Import the new ChatWindow component
-import avatar from "../assets/icons8-video-chat-40.png";
+import ChatWindow from "../Components/ChatWindow";
+import avatar from "../assets/icons8-video-chat-40.png"; // Placeholder avatar
 
 const ChatPage = () => {
+  const loggedInUserId = Cookies.get("userid");
+  const [users, setUsers] = useState([]);
+  const [currentChatPartner, setCurrentChatPartner] = useState(null);
+  const [socket, setSocket] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [userStatuses, setUserStatuses] = useState({}); // New state for user statuses
+
+  const fetchUsers = async () => {
+    const response = await axios.get(
+      `${process.env.REACT_APP_BACKEND_URL}api/v1/user/getConnections`,
+      {
+        withCredentials: true,
+      }
+    );
+    setUsers(response.data);
+  };
+
   useEffect(() => {
     const token = Cookies.get("userToken");
     if (!token) {
@@ -13,17 +30,18 @@ const ChatPage = () => {
     }
   }, []);
 
-  const loggedInUserId = Cookies.get("userid");
-  const [users, setUsers] = useState([]);
-  const [currentChatPartner, setCurrentChatPartner] = useState(null);
-  const [socket, setSocket] = useState(null);
-  const [searchTerm, setSearchTerm] = useState("");
-
   useEffect(() => {
     const token = Cookies.get("userToken");
     if (loggedInUserId || token) {
-      const newSocket = io("http://localhost:5000", { query: { token } });
+      const newSocket = io("http://localhost:5000", {
+        query: { token: token },
+      });
       setSocket(newSocket);
+
+      // Listen for user status updates
+      newSocket.on("userStatusUpdate", (updatedUsers) => {
+        setUserStatuses(updatedUsers);
+      });
 
       return () => {
         newSocket.disconnect();
@@ -33,16 +51,6 @@ const ChatPage = () => {
 
   // Fetch the list of users excluding the current user
   useEffect(() => {
-    const fetchUsers = async () => {
-      const response = await axios.get(
-        "http://localhost:5000/api/v1/user/getConnections",
-        {
-          withCredentials: true,
-        }
-      );
-      setUsers(response.data);
-    };
-
     if (loggedInUserId) {
       fetchUsers();
     }
@@ -57,42 +65,54 @@ const ChatPage = () => {
   );
 
   return (
-    <div className="flex h-screen bg-gray-100">
-      {/* User List */}
-      <div className="w-1/4 border-r border-gray-300 p-4 bg-white">
-        <h2 className="text-xl font-semibold mb-4">Connections</h2>
-
-        {/* Search Field */}
-        <input
-          type="text"
-          placeholder="Search users..."
-          className="mb-4 w-full p-2 border border-gray-300 rounded"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-
-        {filteredUsers.map((user) => (
-          <div
-            key={user._id}
-            onClick={() => selectUser(user._id, user.name)}
-            className={`cursor-pointer p-2 rounded flex items-center ${
-              currentChatPartner?._id === user._id
-                ? "bg-blue-500 text-white"
-                : "hover:bg-gray-200"
-            }`}
-          >
-            {/* Avatar Image */}
-            <img
-              src={user.avatar || avatar} // Use user's avatar or a placeholder
-              alt={`${user.name}'s avatar`}
-              className="w-10 h-10 rounded-full mr-2"
+    <div className="flex h-screen bg-gray-50">
+      {/* User List Section */}
+      <div className="w-1/4 bg-white p-4 border-r border-gray-200 overflow-y-auto">
+        <div className="flex justify-between items-center px-5 py-3 border-b border-gray-200">
+          {/* Search Field with Icon */}
+          <form className="flex items-center w-full">
+            <i className="fa fa-search text-gray-400"></i>
+            <input
+              type="text"
+              placeholder="Search users..."
+              className="ml-2 w-full border-none focus:outline-none"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
             />
-            <span>{user.name}</span>
-          </div>
-        ))}
+          </form>
+        </div>
+
+        {/* User List */}
+        <div className="mt-4">
+          {filteredUsers.map((user) => (
+            <div
+              key={user._id}
+              onClick={() => selectUser(user._id, user.name)}
+              className={`flex items-center p-3 rounded-lg cursor-pointer mb-2 transition-colors duration-200 ${
+                currentChatPartner?._id === user._id
+                  ? "bg-blue-500 text-white"
+                  : "hover:bg-gray-100"
+              }`}
+            >
+              <img
+                src={user.avatar || avatar} // Placeholder avatar if user has no avatar
+                alt={`${user.name}'s avatar`}
+                className="w-12 h-12 rounded-full mr-3"
+              />
+              <div>
+                <span className="block text-lg font-medium">{user.name}</span>
+                <span className="block text-sm">
+                  {userStatuses[user._id]?.socketIds.length > 0
+                    ? "Online"
+                    : "Offline"}
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
 
-      {/* Chat Window */}
+      {/* Chat Window Section */}
       {currentChatPartner ? (
         <ChatWindow
           currentChatPartner={currentChatPartner}
@@ -100,7 +120,7 @@ const ChatPage = () => {
           socket={socket}
         />
       ) : (
-        <div className="flex-1 p-4 flex items-center justify-center">
+        <div className="flex-1 flex items-center justify-center p-6 bg-white">
           <h2 className="text-xl font-semibold">Select a user to chat with</h2>
         </div>
       )}

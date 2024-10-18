@@ -7,6 +7,7 @@ import CoursesListed from "../Components/CoursesListed";
 import { useEffect, useState } from "react";
 import { UniversitiesList } from "../assets/UniversitiesList";
 import { CoursesList } from "../assets/CoursesList";
+import { Toaster } from "react-hot-toast";
 
 const HomePage = () => {
   const [universities, setUniversities] = useState([]);
@@ -21,6 +22,7 @@ const HomePage = () => {
     <div className="flex flex-col min-h-screen w-full">
       {/* Navigation Bar */}
       <NavBar />
+      <Toaster />
 
       {/* Main Content */}
       <main className="opacity-0 animate-fadeIn">

@@ -7,19 +7,27 @@ import UploadPage from "./Pages/UploadPage";
 import DashboardPage from "./Pages/DashboardPage";
 import ChatPage from "./Pages/ChatPage";
 import CommunityPage from "./Pages/CommunityPage";
+import UserProfilePage from "./Pages/UserProfilePage";
 
 function App() {
+  
+  // const token = Cookies.get("userToken");
+  // if (token) {
+  //   axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  // }
+
   return (
     <div>
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
-        <Route path="/search" element={<SubjectPage />}/>
-        <Route path="/upload" element={<UploadPage />}/>
-        <Route path="/profile" element={<DashboardPage />}/>
-        <Route path="/community" element={<CommunityPage />}/>
-        <Route path="/community/Chat" element={<ChatPage />}/>
+        <Route path="/search" element={<SubjectPage />} />
+        <Route path="/upload" element={<UploadPage />} />
+        <Route path="/myProfile" element={<DashboardPage />} />
+        <Route path="/userProfile/:userId" element={<UserProfilePage />} />
+        <Route path="/community" element={<CommunityPage />} />
+        <Route path="/community/Chat" element={<ChatPage />} />
       </Routes>
     </div>
   );

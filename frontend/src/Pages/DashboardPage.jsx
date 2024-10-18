@@ -10,8 +10,6 @@ import SentRequests from "../Components/SentRequests";
 import IncomingRequests from "../Components/IncomingRequests";
 
 const DashboardPage = () => {
-  
-  
   useEffect(() => {
     const token = Cookies.get("userToken");
     if (!token) {
@@ -19,27 +17,29 @@ const DashboardPage = () => {
     }
   }, []);
 
-  const [activeTab, setActiveTab] = useState("Account");
+  const [activeTab, setActiveTab] = useState("");
   const [userDetails, setuserDetails] = useState({
     username: "",
     university: "",
     uploads: "",
     email: "",
+    connections: "",
   });
 
   const userData = async () => {
-    const res = await axios.get("http://localhost:5000/api/v1/user/getInfo", {
+    const res = await axios.get(`${process.env.REACT_APP_BACKEND_URL}api/v1/user/getInfo`, {
       withCredentials: true,
     });
 
     const userDetails = res.data.user;
-    console.log(userDetails);
+    console.log(userDetails.connections);
 
     setuserDetails({
       username: userDetails.name,
       university: userDetails.university,
       uploads: userDetails.uploads,
       email: userDetails.email,
+      connections: userDetails.connections,
     });
   };
 
@@ -55,9 +55,9 @@ const DashboardPage = () => {
         return <MyUploads userDetails={userDetails} />;
       case "Connections":
         return <Connections userDetails={userDetails} />;
-        case"Incoming Requests":
+      case "Incoming Requests":
         return <IncomingRequests />;
-        case"Requests Sent":
+      case "Requests Sent":
         return <SentRequests />;
       default:
         return <Account userDetails={userDetails} />;

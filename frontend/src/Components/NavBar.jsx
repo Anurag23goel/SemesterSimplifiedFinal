@@ -42,7 +42,7 @@ const NavBar = () => {
         {isLogin ? (
           <>
             <li>
-              <NavLink to={`/profile?user=${userID}`}>
+              <NavLink to={`/myProfile?user=${userID}`}>
                 <button className="border border-black px-2 py-1 rounded-lg transition-transform duration-300 hover:scale-110 hover:bg-gray-200">
                   Profile
                 </button>

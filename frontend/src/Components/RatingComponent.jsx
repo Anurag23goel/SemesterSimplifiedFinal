@@ -29,7 +29,7 @@ const RatingComponent = ({
 
     try {
       const response = await axios.post(
-        `http://localhost:5000/api/v1/documents/${documentId}/rate`,
+        `${process.env.REACT_APP_BACKEND_URL}api/v1/documents/${documentId}/rate`,
         { rating: newRating },
         { withCredentials: true }
       );
@@ -49,7 +49,7 @@ const RatingComponent = ({
       const fetchInitialData = async () => {
         try {
           const response = await axios.get(
-            `http://localhost:5000/api/v1/documents/${documentId}`,
+            `${process.env.REACT_APP_BACKEND_URL}api/v1/documents/${documentId}`,
             { withCredentials: true }
           );
 

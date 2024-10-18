@@ -8,7 +8,7 @@ const IncomingRequests = () => {
   const fetchIncomingRequests = async () => {
     try {
       const res = await axios.get(
-        "http://localhost:5000/api/v1/user/getAllRequests",
+        `${process.env.REACT_APP_BACKEND_URL}/api/v1/user/getAllRequests`,
         { withCredentials: true }
       );
       setIncomingRequests(res.data.incomingReq);
@@ -21,7 +21,7 @@ const IncomingRequests = () => {
   const handleAcceptRequest = async (requestId) => {
     try {
       const res = await axios.post(
-        `http://localhost:5000/api/v1/user/acceptRequest?requestId=${requestId}`,
+        `${process.env.REACT_APP_BACKEND_URL}/api/v1/user/acceptRequest?requestId=${requestId}`,
         {},
         { withCredentials: true }
       );
@@ -39,7 +39,7 @@ const IncomingRequests = () => {
   const handleDeclineRequest = async (requestId) => {
     try {
       const res = await axios.post(
-        `http://localhost:5000/api/v1/user/declineRequest?requestId=${requestId}`,
+        `${process.env.REACT_APP_BACKEND_URL}api/v1/user/declineRequest?requestId=${requestId}`,
         {},
         { withCredentials: true }
       );

@@ -1,7 +1,10 @@
-// src/components/Uploads.js
-import React from "react";
+import React, { useState } from "react";
+import { FaPlus } from "react-icons/fa";
+import UploadPage from "../Pages/UploadPage";
 
 const MyUploads = ({ userDetails }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const handleView = (url) => {
     if (url) {
       window.open(url, "_blank", "noopener,noreferrer");
@@ -10,9 +13,31 @@ const MyUploads = ({ userDetails }) => {
     }
   };
 
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
   return (
     <div className="bg-white p-6 rounded shadow">
-      <h2 className="text-2xl font-semibold mb-4">Your Uploads</h2>
+      <div className="flex flex-row justify-between items-center">
+        <div className="gap-y-0 mb-4 flex flex-col">
+          <h2 className="text-2xl font-semibold">Your Uploads</h2>
+          <p className="text-gray-500">
+            Total Uploads: <span>{userDetails.uploads.length}</span>
+          </p>
+        </div>
+        <div className="mr-7 text-2xl">
+          <FaPlus
+            className="text-blue-500 cursor-pointer"
+            onClick={openModal}
+          />
+        </div>
+      </div>
+
       {userDetails.uploads.length > 0 ? (
         <ul className="space-y-2">
           {userDetails.uploads.map((file) => (
@@ -41,6 +66,21 @@ const MyUploads = ({ userDetails }) => {
         </ul>
       ) : (
         <p className="text-gray-600">No uploads found.</p>
+      )}
+
+      {/* Modal for UploadPage */}
+      {isModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 p-4 sm:p-6 lg:p-8">
+          <div className="bg-white p-4 sm:p-6 lg:p-8 rounded-lg w-full max-w-lg sm:max-w-xl lg:max-w-2xl max-h-[90vh] overflow-y-auto relative">
+            <button
+              onClick={closeModal}
+              className="absolute top-2 right-2 text-gray-600 hover:text-gray-900 text-2xl"
+            >
+              &times;
+            </button>
+            <UploadPage closeModal={closeModal} />
+          </div>
+        </div>
       )}
     </div>
   );

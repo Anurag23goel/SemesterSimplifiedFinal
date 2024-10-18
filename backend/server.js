@@ -5,10 +5,9 @@ const routes = require("./routes/index.js");
 const dbConnection = require("./connections/connection.js");
 require("dotenv").config();
 const cookieParser = require("cookie-parser");
-dbConnection();
-
 
 // Import Socket.IO and HTTP
+const app = express();
 const { Server } = require("socket.io");
 const http = require("http");
 
@@ -16,13 +15,13 @@ const http = require("http");
 const socketHandler = require("./socket/socketHandler");
 
 // Initialize Express
-const app = express();
 
 // Middleware
 app.use(
   cors({
-    origin: true, // Specify your frontend URL if necessary
-    credentials: true,
+    origin: ['http://localhost:3000', 'http://192.168.1.10:3000'], // Specify your frontend URL(s)
+    methods: ["GET", "POST", "PUT", "DELETE"], // Include all necessary methods
+    credentials: true, // Allow credentials (cookies)
   })
 );
 app.use(express.json());
@@ -42,9 +41,9 @@ const server = http.createServer(app);
 // Initialize Socket.IO
 const io = new Server(server, {
   cors: {
-    origin: true, // Replace with your frontend URL if needed
-    methods: ["GET", "POST"],
-    credentials: true,
+    origin: ['http://localhost:3000', 'http://192.168.1.10:3000'], // Specify your frontend URL(s)
+    methods: ["GET", "POST", "PUT", "DELETE"], // Include all necessary methods
+    credentials: true, // Allow credentials (cookies)
   },
 });
 
@@ -52,8 +51,8 @@ const io = new Server(server, {
 socketHandler(io);
 
 // Start Server
-const PORT = process.env.PORT || 5000;
-server.listen(PORT, () => {
+const PORT = process.env.PORT || 8000;
+server.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on port ${PORT}`);
-  // Database Connection
+  dbConnection();
 });

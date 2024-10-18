@@ -49,7 +49,7 @@ const Account = ({ userDetails }) => {
       }
 
       await axios.post(
-        "http://localhost:5000/api/v1/user/updateUser",
+        `${process.env.REACT_APP_BACKEND_URL}api/v1/user/updateUser`,
         payload,
         {
           withCredentials: true,

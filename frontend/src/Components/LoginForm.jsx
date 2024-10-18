@@ -2,8 +2,7 @@ import React, { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import axios from "axios";
-import { toast } from "react-toastify";
-
+import toast, { Toaster } from "react-hot-toast";
 const LoginForm = ({ onClose, onLoginSuccess }) => {
   const [showPass, setShowPass] = useState(false);
   const [formData, setFormData] = useState({
@@ -27,7 +26,7 @@ const LoginForm = ({ onClose, onLoginSuccess }) => {
     event.preventDefault();
 
     const res = await axios.post(
-      "http://localhost:5000/api/v1/user/login",
+      `${process.env.REACT_APP_BACKEND_URL}api/v1/user/login`,
       {
         email: formData.email,
         password: formData.password,
@@ -46,6 +45,7 @@ const LoginForm = ({ onClose, onLoginSuccess }) => {
 
   return (
     <form className="bg-[#F5F5F5] p-6 rounded-lg w-full max-w-xl mx-auto">
+      <Toaster />
       <div className="text-left mb-6">
         <h1 className="text-3xl font-bold text-black">WELCOME</h1>
         <p className="mt-2 text-black text-lg">
@@ -68,7 +68,7 @@ const LoginForm = ({ onClose, onLoginSuccess }) => {
           name="email"
           id="email"
           value={formData.email}
-          placeholder="name@company.com"
+          placeholder="johndoe@example.com"
           onChange={changeHandler}
           className="w-full p-2 mt-1 rounded-md bg-white text-black focus:outline-none focus:ring-2 focus:ring-blue-500"
         />

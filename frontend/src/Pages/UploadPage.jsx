@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { storage } from "../firebase"; // Adjust the path as necessary
+import { storage } from "../firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import axios from "axios";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { data } from "../assets/Suggestions"; // Import your degree and subjects data
+import { data } from "../assets/Suggestions";
 import { UniversitiesList } from "../assets/UniversitiesList";
 import Cookies from "js-cookie";
 
-const UploadPage = () => {
+const UploadPage = ({ closeModal }) => {
   const [file, setFile] = useState(null);
   const [uploading, setUploading] = useState(false);
 
@@ -19,21 +19,18 @@ const UploadPage = () => {
     }
   }, []);
 
-  // Form data state
   const [formData, setFormData] = useState({
     title: "",
     description: "",
-    course: "", // The selected course
-    subject: "", // The selected subject
-    category: "select", // Default value
+    course: "",
+    subject: "",
+    category: "select",
     uploadedBy: "",
     university: "",
   });
 
-  // State to store subjects based on selected course
   const [subjects, setSubjects] = useState([]);
 
-  // Handle input changes for the form fields
   const changeHandler = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -41,11 +38,24 @@ const UploadPage = () => {
       [name]: value,
     }));
 
-    // When course is changed, update the subjects accordingly
     if (name === "course") {
       const selectedDegree = data.find((d) => d.degree === value);
       setSubjects(selectedDegree ? selectedDegree.subjects : []);
     }
+  };
+
+  const validateFile = (file) => {
+    const maxSizeInMB = 10;
+    const validTypes = ["application/pdf"];
+    if (!validTypes.includes(file.type)) {
+      toast.error("Please upload a valid PDF file.");
+      return false;
+    }
+    if (file.size > maxSizeInMB * 1024 * 1024) {
+      toast.error(`File size exceeds ${maxSizeInMB}MB.`);
+      return false;
+    }
+    return true;
   };
 
   const submitHandler = async (e) => {
@@ -56,6 +66,10 @@ const UploadPage = () => {
       return;
     }
 
+    if (!validateFile(file)) {
+      return;
+    }
+
     setUploading(true);
 
     try {
@@ -63,9 +77,8 @@ const UploadPage = () => {
       const snapshot = await uploadBytes(storageRef, file);
       const downloadURL = await getDownloadURL(snapshot.ref);
 
-      // Send form data along with the file's URL to your backend
       const res = await axios.post(
-        "http://localhost:5000/api/v1/documents/upload",
+        `${process.env.REACT_APP_BACKEND_URL}api/v1/documents/upload`,
         {
           ...formData,
           url: downloadURL,
@@ -75,7 +88,7 @@ const UploadPage = () => {
 
       if (res.data.status === "success") {
         toast.success("File uploaded successfully!");
-        setFile(null); // Clear the file input
+        setFile(null);
         setFormData({
           title: "",
           description: "",
@@ -85,7 +98,7 @@ const UploadPage = () => {
           uploadedBy: "",
           university: "",
         });
-        // navigate('/myUploads')
+        closeModal(); // Close modal on successful upload
       } else {
         toast.error("Failed to save file information.");
       }
@@ -98,10 +111,10 @@ const UploadPage = () => {
   };
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="container mx-auto max-h-fit overflow-auto p-4">
       <form
         onSubmit={submitHandler}
-        className="bg-[#F5F5F5] p-6 rounded-lg w-full max-w-xl mx-auto space-y-6"
+        className="bg-[#F5F5F5] p-6 rounded-lg w-full max-w-lg sm:max-w-xl lg:max-w-2xl mx-auto space-y-6"
       >
         <div className="text-left mb-6">
           <h1 className="text-3xl font-bold text-black text-center">

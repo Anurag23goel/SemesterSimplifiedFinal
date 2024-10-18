@@ -7,7 +7,7 @@ const SentRequests = () => {
   const fetchOutgoingRequests = async () => {
     try {
       const res = await axios.get(
-        "http://localhost:5000/api/v1/user/getAllRequests",
+        `${process.env.REACT_APP_BACKEND_URL}api/v1/user/getAllRequests`,
         { withCredentials: true }
       );
       setOutgoingRequests(res.data.outgoingReq);
