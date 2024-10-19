@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 
-const SentRequests = () => {
+const SentRequestsPage = () => {
   const [outgoingRequests, setOutgoingRequests] = useState([]);
 
   const fetchOutgoingRequests = async () => {
@@ -61,4 +61,4 @@ const SentRequests = () => {
   );
 };
 
-export default SentRequests;
+export default SentRequestsPage;

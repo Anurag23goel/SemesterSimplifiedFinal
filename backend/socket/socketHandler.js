@@ -108,12 +108,10 @@ module.exports = (io) => {
         const index = socketIds.indexOf(socket.id);
         if (index !== -1) {
           socketIds.splice(index, 1);
-          console.log(`Socket ${socket.id} disconnected from user ${userId}`);
 
           // If no more socket IDs, remove the user entry and set offline status
           if (socketIds.length === 0) {
             delete users[userId];
-            console.log(`User ${userId} completely disconnected`);
           }
         }
 

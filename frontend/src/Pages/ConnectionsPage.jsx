@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 
-const Connections = ({ userDetails }) => {
+const ConnectionsPage = ({ userDetails }) => {
   const [connections, setConnections] = useState([]);
 
   useEffect(() => {
@@ -58,4 +58,4 @@ const Connections = ({ userDetails }) => {
   );
 };
 
-export default Connections;
+export default ConnectionsPage;

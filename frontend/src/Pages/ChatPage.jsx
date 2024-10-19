@@ -30,6 +30,8 @@ const ChatPage = () => {
     }
   }, []);
 
+  
+  
   useEffect(() => {
     const token = Cookies.get("userToken");
     if (loggedInUserId || token) {
@@ -64,6 +66,8 @@ const ChatPage = () => {
     user.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  console.log(filteredUsers);
+  
   return (
     <div className="flex h-screen bg-gray-50">
       {/* User List Section */}
@@ -95,7 +99,7 @@ const ChatPage = () => {
               }`}
             >
               <img
-                src={user.avatar || avatar} // Placeholder avatar if user has no avatar
+                src={user.profilePicture || avatar} // Placeholder avatar if user has no avatar
                 alt={`${user.name}'s avatar`}
                 className="w-12 h-12 rounded-full mr-3"
               />

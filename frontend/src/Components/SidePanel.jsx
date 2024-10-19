@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import UpdateProfilePic from "./UpdateProfilePic"; // Import the component
-import { IoMdCloseCircleOutline } from "react-icons/io";
 import { IoClose } from "react-icons/io5";
 
 const SidePanel = ({ activeTab, setActiveTab, userDetails }) => {
@@ -24,6 +23,24 @@ const SidePanel = ({ activeTab, setActiveTab, userDetails }) => {
     "Incoming Requests",
     "Requests Sent",
   ];
+
+  const handleEscKey = (event) => {
+    if (event.key === "Escape") {
+      setIsModalOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    if (isModalOpen) {
+      // Add event listener when the modal is open
+      window.addEventListener("keydown", handleEscKey);
+    }
+
+    // Cleanup event listener when the modal is closed or component unmounts
+    return () => {
+      window.removeEventListener("keydown", handleEscKey);
+    };
+  }, [isModalOpen]); // Only run when isModalOpen changes
 
   return (
     <div className="w-64 bg-blue-800 text-white flex flex-col h-full">

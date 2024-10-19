@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaPlus } from "react-icons/fa";
-import UploadPage from "../Pages/UploadPage";
+import UploadFileComponent from "../Components/UploadFileComponent";
 
-const MyUploads = ({ userDetails }) => {
+const MyUploadsPage = ({ userDetails }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleView = (url) => {
@@ -20,6 +20,25 @@ const MyUploads = ({ userDetails }) => {
   const closeModal = () => {
     setIsModalOpen(false);
   };
+
+  const handleEscKey = (event) => {
+    if (event.key === "Escape") {
+      setIsModalOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    if (isModalOpen) {
+      // Add event listener when the modal is open
+      window.addEventListener("keydown", handleEscKey);
+    }
+
+    // Cleanup event listener when the modal is closed or component unmounts
+    return () => {
+      window.removeEventListener("keydown", handleEscKey);
+    };
+  }, [isModalOpen]); // Only run when isModalOpen changes
+
 
   return (
     <div className="bg-white p-6 rounded shadow">
@@ -78,7 +97,7 @@ const MyUploads = ({ userDetails }) => {
             >
               &times;
             </button>
-            <UploadPage closeModal={closeModal} />
+            <UploadFileComponent closeModal={closeModal} />
           </div>
         </div>
       )}
@@ -86,4 +105,4 @@ const MyUploads = ({ userDetails }) => {
   );
 };
 
-export default MyUploads;
+export default MyUploadsPage;

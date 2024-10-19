@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Account from "../Components/Account";
-import MyUploads from "../Components/Uploads";
-import Connections from "../Components/Connections";
+import MyUploadsPage from "../Pages/UploadsPage";
+import ConnectionsPage from "../Pages/ConnectionsPage";
 import SidePanel from "../Components/SidePanel";
 import { Navigate } from "react-router-dom";
 import Cookies from "js-cookie";
-import SentRequests from "../Components/SentRequests";
-import IncomingRequests from "../Components/IncomingRequests";
+import SentRequestsPage from "../Pages/SentRequestsPage";
+import IncomingRequestsPage from "../Pages/IncomingRequestsPage";
 
 const DashboardPage = () => {
   useEffect(() => {
@@ -52,13 +52,13 @@ const DashboardPage = () => {
       case "Account":
         return <Account userDetails={userDetails} />;
       case "My Uploads":
-        return <MyUploads userDetails={userDetails} />;
+        return <MyUploadsPage userDetails={userDetails} />;
       case "Connections":
-        return <Connections userDetails={userDetails} />;
+        return <ConnectionsPage userDetails={userDetails} />;
       case "Incoming Requests":
-        return <IncomingRequests />;
+        return <IncomingRequestsPage />;
       case "Requests Sent":
-        return <SentRequests />;
+        return <SentRequestsPage />;
       default:
         return <Account userDetails={userDetails} />;
     }

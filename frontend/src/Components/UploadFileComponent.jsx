@@ -8,7 +8,7 @@ import { data } from "../assets/Suggestions";
 import { UniversitiesList } from "../assets/UniversitiesList";
 import Cookies from "js-cookie";
 
-const UploadPage = ({ closeModal }) => {
+const UploadFileComponent = ({ closeModal }) => {
   const [file, setFile] = useState(null);
   const [uploading, setUploading] = useState(false);
 
@@ -289,4 +289,4 @@ const UploadPage = ({ closeModal }) => {
   );
 };
 
-export default UploadPage;
+export default UploadFileComponent;

@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify"; // Assuming you're using react-toastify for notifications
 
-const IncomingRequests = () => {
+const IncomingRequestsPage = () => {
   
   const [incomingRequests, setIncomingRequests] = useState([]);
 
@@ -113,4 +113,4 @@ const IncomingRequests = () => {
   );
 };
 
-export default IncomingRequests;
+export default IncomingRequestsPage;
