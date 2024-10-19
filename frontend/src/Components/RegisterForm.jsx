@@ -6,6 +6,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { UniversitiesList } from "../assets/UniversitiesList";
 
 const RegisterForm = () => {
   const [showPass, setShowPass] = useState(false);
@@ -17,7 +18,7 @@ const RegisterForm = () => {
     confirmPassword: "",
     terms: false,
   });
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const changeHandler = (event) => {
     const { name, type, checked, value } = event.target;
@@ -114,6 +115,23 @@ const RegisterForm = () => {
           onChange={changeHandler}
           className="p-3 rounded-md bg-white text-black border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
+      </div>
+
+      <div className="w-full max-w-sm mx-auto my-4">
+        <select
+          name="university"
+          id="university"
+          className="w-full p-3 border border-gray-300 rounded-md bg-gray-50 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+        >
+          <option value="Select University" disabled>
+            Select University
+          </option>
+          {UniversitiesList.map((university, index) => (
+            <option key={index} value={university.fullName}>
+              {university.fullName}
+            </option>
+          ))}
+        </select>
       </div>
 
       <div className="flex flex-col space-y-2">

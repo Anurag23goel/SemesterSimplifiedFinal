@@ -3,16 +3,16 @@ import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify"; // Assuming you're using react-toastify for notifications
 
 const IncomingRequests = () => {
+  
   const [incomingRequests, setIncomingRequests] = useState([]);
 
   const fetchIncomingRequests = async () => {
     try {
       const res = await axios.get(
-        `${process.env.REACT_APP_BACKEND_URL}/api/v1/user/getAllRequests`,
+        `${process.env.REACT_APP_BACKEND_URL}api/v1/user/getAllRequests`,
         { withCredentials: true }
       );
       setIncomingRequests(res.data.incomingReq);
-      console.log(res.data.incomingReq);
     } catch (error) {
       console.error("Error fetching incoming requests:", error);
     }
@@ -73,13 +73,17 @@ const IncomingRequests = () => {
             >
               {/* User's Avatar */}
               <img
-                src={req.senderProfilePicture || "https://via.placeholder.com/100"}
+                src={
+                  req.senderProfilePicture || "https://via.placeholder.com/100"
+                }
                 alt={req.senderName}
                 className="w-24 h-24 rounded-full mb-4"
               />
 
               {/* Sender's Name */}
-              <h2 className="text-xl font-semibold mb-2">{req.senderId.name}</h2>
+              <h2 className="text-xl font-semibold mb-2">
+                {req.senderId.name}
+              </h2>
 
               {/* University or Additional Info */}
               <p className="text-gray-500 mb-4">
@@ -110,8 +114,3 @@ const IncomingRequests = () => {
 };
 
 export default IncomingRequests;
-
-
-
-
-  

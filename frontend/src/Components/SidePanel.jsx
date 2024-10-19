@@ -1,15 +1,18 @@
-// src/components/SidePanel.js
-import React from "react";
+import React, { useState } from "react";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
+import UpdateProfilePic from "./UpdateProfilePic"; // Import the component
+import { IoMdCloseCircleOutline } from "react-icons/io";
+import { IoClose } from "react-icons/io5";
 
 const SidePanel = ({ activeTab, setActiveTab, userDetails }) => {
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate();
+  const [isModalOpen, setIsModalOpen] = useState(false); // State for modal
 
   const handleLogout = () => {
-    Cookies.remove("userToken"); // Remove the token cookie
+    Cookies.remove("userToken");
     Cookies.remove("userid");
-    navigate("/"); // Redirect to home page after logging out
+    navigate("/");
   };
 
   const menuItems = [
@@ -19,7 +22,7 @@ const SidePanel = ({ activeTab, setActiveTab, userDetails }) => {
     "My Uploads",
     "Connections",
     "Incoming Requests",
-    "Requests Sent"
+    "Requests Sent",
   ];
 
   return (
@@ -27,10 +30,15 @@ const SidePanel = ({ activeTab, setActiveTab, userDetails }) => {
       {/* User Info Section */}
       <div className="flex flex-col items-center p-6 border-b border-blue-700">
         <img
-          src="https://avatar.iran.liara.run/public/boy?username=Ash"
+          src={
+            userDetails.avatar ||
+            "https://avatar.iran.liara.run/public/boy?username=Ash"
+          }
           alt="Profile"
-          className="w-24 h-24 rounded-full mb-4 object-cover"
+          className="w-24 h-24 rounded-full mb-4 object-cover cursor-pointer"
+          onClick={() => setIsModalOpen(true)} // Open modal on image click
         />
+
         <h3 className="text-xl font-semibold">{userDetails.username}</h3>
         <p className="text-sm">{userDetails.university}</p>
       </div>
@@ -59,6 +67,23 @@ const SidePanel = ({ activeTab, setActiveTab, userDetails }) => {
           Log Out
         </button>
       </div>
+
+      {/* Update Profile Pic Modal */}
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full relative">
+            {" "}
+            {/* Add relative positioning */}
+            <button
+              className="absolute text-2xl top-4 right-2 text-gray-500 hover:text-gray-800" // Change to absolute positioning
+              onClick={() => setIsModalOpen(false)}
+            >
+              <IoClose />
+            </button>
+            <UpdateProfilePic closeModal={() => setIsModalOpen(false)} />{" "}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

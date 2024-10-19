@@ -35,7 +35,7 @@ const Account = ({ userDetails }) => {
         return;
       }
     }
-    
+
     try {
       const payload = {
         name: formData.name,
@@ -139,12 +139,12 @@ const Account = ({ userDetails }) => {
                 onChange={changeHandler}
                 value={formData.password}
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-                placeholder="Leave blank to keep current password"
+                placeholder="Enter new password"
               />
               <button
                 type="button"
                 onClick={() => setShowPass((prev) => !prev)}
-                className="absolute inset-y-0 right-0 px-3 flex items-center text-sm leading-5"
+                className="absolute inset-y-0 right-0 px-3 flex items-center text-sm leading-5 pt-5"
               >
                 {showPass ? "Hide" : "Show"}
               </button>
@@ -170,7 +170,7 @@ const Account = ({ userDetails }) => {
               <button
                 type="button"
                 onClick={() => setConfirmPass((prev) => !prev)}
-                className="absolute inset-y-0 right-0 px-3 flex items-center text-sm leading-5"
+                className="absolute inset-y-0 right-0 px-3 flex items-center text-sm leading-5 pt-5"
               >
                 {confirmPass ? "Hide" : "Show"}
               </button>

@@ -4,8 +4,8 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken"); // Ensure you have this installed
 require("dotenv").config();
 const ConnectionRequest = require("../models/connectionRequestModel");
-const { connections } = require("mongoose");
-
+const fs = require("fs");
+const cloudinary = require("cloudinary").v2;
 const registerUser = async (req, res) => {
   const { name, email, password, university, role } = req.body;
 
@@ -105,7 +105,7 @@ const getUserInfo = async (req, res) => {
   try {
     const myselfUser = await User.findById(userID)
       .populate("materialUploaded", "title url uploadedAt")
-      .populate("connections", "name university"); // Populate connections with name and university
+      .populate("connections", "name university profilePicture"); // Populate connections with name and university
 
     res.json({
       status: "ok",
@@ -115,6 +115,7 @@ const getUserInfo = async (req, res) => {
         university: myselfUser.university,
         uploads: myselfUser.materialUploaded,
         connections: myselfUser.connections,
+        avatar: myselfUser.profilePicture
       },
     });
   } catch (error) {
@@ -336,6 +337,58 @@ const acceptConnectionRequest = async (req, res) => {
   }
 };
 
+const declineConnectionRequest = async (req, res) => {
+  const reqId = req.query.requestId;
+  try {
+    await ConnectionRequest.findByIdAndDelete(reqId);
+    res.json({ status: "ok", message: "Connection request declined" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+const uploadAvatar = async (req, res) => {
+  const file = req.files.file;
+
+  try {
+    // Construct the file path with correct extension
+    const path = `./tempUploads/${Date.now()}.${file.name.split(".").pop()}`;
+
+    // Move the file to the path
+    await file.mv(path);
+
+    // Upload file to Cloudinary
+    const result = await cloudinary.uploader.upload(path, {
+      public_id: req.user.id, // Assuming req.user.id is available
+      tags: "profile",
+    });
+
+    // Remove file from local uploads folder
+    fs.unlinkSync(path, (err) => {
+      if (err) {
+        console.error("Failed to delete local file:", err);
+      }
+    });
+
+    // Update user in the database with the new profile picture URL
+    const user = await User.findByIdAndUpdate(
+      req.user.id, // Assuming the user ID is in req.user
+      { profilePicture: result.secure_url },
+      { new: true } // Return the updated user
+    );
+
+    // Send response
+    res.status(200).json({
+      message: "Avatar uploaded successfully",
+      user,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
 module.exports = {
   registerUser,
   loginUser,
@@ -347,4 +400,6 @@ module.exports = {
   acceptConnectionRequest,
   getAllRequests,
   getRequestedUserInfo,
+  declineConnectionRequest,
+  uploadAvatar,
 };

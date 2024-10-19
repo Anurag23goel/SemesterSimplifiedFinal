@@ -7,7 +7,6 @@ const Connections = ({ userDetails }) => {
   useEffect(() => {
     // fetchConnections();
     setConnections(userDetails.connections);
-    console.log(userDetails.connections);
   }, []);
 
   return (

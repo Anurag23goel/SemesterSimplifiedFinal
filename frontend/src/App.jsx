@@ -8,6 +8,7 @@ import DashboardPage from "./Pages/DashboardPage";
 import ChatPage from "./Pages/ChatPage";
 import CommunityPage from "./Pages/CommunityPage";
 import UserProfilePage from "./Pages/UserProfilePage";
+import UpdateProfilePic from "./Components/UpdateProfilePic";
 
 function App() {
   
@@ -28,6 +29,7 @@ function App() {
         <Route path="/userProfile/:userId" element={<UserProfilePage />} />
         <Route path="/community" element={<CommunityPage />} />
         <Route path="/community/Chat" element={<ChatPage />} />
+        <Route path="/uploadAvatar" element={<UpdateProfilePic />} />
       </Routes>
     </div>
   );

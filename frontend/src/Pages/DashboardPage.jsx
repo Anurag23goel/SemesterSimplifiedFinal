@@ -32,7 +32,6 @@ const DashboardPage = () => {
     });
 
     const userDetails = res.data.user;
-    console.log(userDetails.connections);
 
     setuserDetails({
       username: userDetails.name,
@@ -40,6 +39,7 @@ const DashboardPage = () => {
       uploads: userDetails.uploads,
       email: userDetails.email,
       connections: userDetails.connections,
+      avatar: userDetails.avatar,
     });
   };
 
