@@ -84,7 +84,7 @@ const loginUser = async (req, res) => {
       const options = {
         httpOnly: true,  // Prevent client-side access to the cookie
         secure: process.env.NODE_ENV === "production", // Only set secure cookies in production (over HTTPS)
-        sameSite: "none", // Needed for cross-origin requests (important for frontend deployment)
+        sameSite: "None", // Needed for cross-origin requests (important for frontend deployment)
         maxAge: 7 * 24 * 60 * 60 * 1000, // 1 week expiration
       };
 
