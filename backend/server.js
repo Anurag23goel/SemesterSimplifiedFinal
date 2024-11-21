@@ -15,13 +15,12 @@ const http = require("http");
 // Import socketHandler
 const socketHandler = require("./socket/socketHandler");
 
-// Initialize Express
-
-// Middleware
+// CORS Configuration
 const allowedOrigins = [
   "http://localhost:3000",
   "http://192.168.1.10:3000",
-  "https://semester-simplified-backend.onrender.com/",
+  "https://semester-simplified-front.vercel.app",
+  "https://semester-simplified-backend.onrender.com",
 ];
 
 app.use(
@@ -37,8 +36,19 @@ app.use(
     credentials: true,
   })
 );
+
 app.use(express.json());
 app.use(cookieParser());
+
+app.use((req, res, next) => {
+  res.cookie("yourCookieName", "cookieValue", {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+    maxAge: 24 * 60 * 60 * 1000,
+  });
+  next();
+});
 
 const fileUpload = require("express-fileupload");
 app.use(
