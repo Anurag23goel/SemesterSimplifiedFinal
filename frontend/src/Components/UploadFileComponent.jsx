@@ -8,7 +8,7 @@ import { data } from "../assets/Suggestions";
 import { UniversitiesList } from "../assets/UniversitiesList";
 import Cookies from "js-cookie";
 
-const UploadFileComponent = ({ closeModal }) => {
+const UploadFileComponent = ({ setIsModalOpen }) => {
   const [file, setFile] = useState(null);
   const [uploading, setUploading] = useState(false);
 
@@ -98,7 +98,7 @@ const UploadFileComponent = ({ closeModal }) => {
           uploadedBy: "",
           university: "",
         });
-        closeModal(); // Close modal on successful upload
+        setIsModalOpen(false); // Close modal on successful upload
       } else {
         toast.error("Failed to save file information.");
       }

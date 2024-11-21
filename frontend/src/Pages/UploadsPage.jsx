@@ -17,10 +17,6 @@ const MyUploadsPage = ({ userDetails }) => {
     setIsModalOpen(true);
   };
 
-  const closeModal = () => {
-    setIsModalOpen(false);
-  };
-
   const handleEscKey = (event) => {
     if (event.key === "Escape") {
       setIsModalOpen(false);
@@ -38,7 +34,6 @@ const MyUploadsPage = ({ userDetails }) => {
       window.removeEventListener("keydown", handleEscKey);
     };
   }, [isModalOpen]); // Only run when isModalOpen changes
-
 
   return (
     <div className="bg-white p-6 rounded shadow">
@@ -92,12 +87,12 @@ const MyUploadsPage = ({ userDetails }) => {
         <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 p-4 sm:p-6 lg:p-8">
           <div className="bg-white p-4 sm:p-6 lg:p-8 rounded-lg w-full max-w-lg sm:max-w-xl lg:max-w-2xl max-h-[90vh] overflow-y-auto relative">
             <button
-              onClick={closeModal}
+              onClick={() => setIsModalOpen(false)}
               className="absolute top-2 right-2 text-gray-600 hover:text-gray-900 text-2xl"
             >
               &times;
             </button>
-            <UploadFileComponent closeModal={closeModal} />
+            <UploadFileComponent setIsModalOpen={setIsModalOpen} />
           </div>
         </div>
       )}
