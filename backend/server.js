@@ -19,6 +19,7 @@ const socketHandler = require("./socket/socketHandler");
 const allowedOrigins = [
   "http://localhost:3000",
   "http://192.168.1.10:3000",
+  "http://localhost:3001",
   "https://semester-simplified-front.vercel.app",
   "https://semester-simplified-backend.onrender.com",
 ];
