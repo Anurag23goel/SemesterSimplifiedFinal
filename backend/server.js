@@ -20,7 +20,7 @@ const socketHandler = require("./socket/socketHandler");
 // Middleware
 app.use(
   cors({
-    origin: ["http://localhost:3000", "http://192.168.1.10:3000"], // Specify your frontend URL(s)
+    origin: ["http://localhost:3000", "http://192.168.1.10:3000", "https://semester-simplified-backend.onrender.com/"], // Specify your frontend URL(s)
     methods: ["GET", "POST", "PUT", "DELETE"], // Include all necessary methods
     credentials: true, // Allow credentials (cookies)
   })
@@ -50,7 +50,7 @@ const server = http.createServer(app);
 // Initialize Socket.IO
 const io = new Server(server, {
   cors: {
-    origin: true, // Specify your frontend URL(s) ["http://localhost:3000", "http://192.168.1.10:3000", "https://semester-simplified-backend.onrender.com/"]
+    origin: ["http://localhost:3000", "http://192.168.1.10:3000", "https://semester-simplified-backend.onrender.com/"], // Specify your frontend URL(s)
     methods: ["GET", "POST", "PUT", "DELETE"], // Include all necessary methods
     credentials: true, // Allow credentials (cookies)
   },
