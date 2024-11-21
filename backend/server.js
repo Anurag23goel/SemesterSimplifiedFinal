@@ -18,11 +18,23 @@ const socketHandler = require("./socket/socketHandler");
 // Initialize Express
 
 // Middleware
+const allowedOrigins = [
+  "http://localhost:3000",
+  "http://192.168.1.10:3000",
+  "https://semester-simplified-backend.onrender.com/",
+];
+
 app.use(
   cors({
-    origin: true, // Specify your frontend URL(s) ["http://localhost:3000", "http://192.168.1.10:3000", "https://semester-simplified-backend.onrender.com/"]
-    methods: ["GET", "POST", "PUT", "DELETE"], // Include all necessary methods
-    credentials: true, // Allow credentials (cookies)
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
   })
 );
 app.use(express.json());
@@ -50,9 +62,9 @@ const server = http.createServer(app);
 // Initialize Socket.IO
 const io = new Server(server, {
   cors: {
-    origin: true, // Specify your frontend URL(s) ["http://localhost:3000", "http://192.168.1.10:3000", "https://semester-simplified-backend.onrender.com/"]
-    methods: ["GET", "POST", "PUT", "DELETE"], // Include all necessary methods
-    credentials: true, // Allow credentials (cookies)
+    origin: allowedOrigins,
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
   },
 });
 
