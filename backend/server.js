@@ -20,7 +20,7 @@ const http = require("http");
 const socketHandler = require("./socket/socketHandler");
 
 // CORS Configuration
-const allowedOrigins = ["http://localhost:3000", "http://192.168.1.10:3000"];
+const allowedOrigins = ["http://localhost:3000", "http://192.168.1.10:3000", "https://semester-simplified-frontend.vercel.app/", "https://semester-simplified-frontend.vercel.app"];
 
 app.use(
   cors({
