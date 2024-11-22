@@ -9,7 +9,6 @@ import CommunityPage from "./Pages/CommunityPage";
 import UserProfilePage from "./Pages/UserProfilePage";
 
 function App() {
-  
   // const token = Cookies.get("userToken");
   // if (token) {
   //   axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
@@ -26,6 +25,7 @@ function App() {
         <Route path="/userProfile/:userId" element={<UserProfilePage />} />
         <Route path="/community" element={<CommunityPage />} />
         <Route path="/community/Chat" element={<ChatPage />} />
+        <Route path="*" element={<h1>404 - Page Not Found</h1>} />
       </Routes>
     </div>
   );
