@@ -6,7 +6,7 @@ const NavBar = () => {
   const [isLogin, setIsLogin] = useState(false);
   const navigate = useNavigate(); // Initialize useNavigate
 
-  const userID = Cookies.get("userid")
+  const userID = Cookies.get("userid");
 
   useEffect(() => {
     const userToken = Cookies.get("userToken");
@@ -19,7 +19,7 @@ const NavBar = () => {
 
   const handleLogout = () => {
     Cookies.remove("userToken"); // Remove the token cookie
-    Cookies.remove("userid")
+    Cookies.remove("userid");
     setIsLogin(false); // Update the login state
     navigate("/"); // Redirect to home page after logging out
   };
@@ -30,9 +30,11 @@ const NavBar = () => {
         <li className="hover:text-blue-500 transition-all duration-300 ease-in-out cursor-pointer">
           <NavLink to="/">Home</NavLink>
         </li>
-        {
-          isLogin && (<NavLink to={`/community`}><li>Community</li></NavLink>)
-        }
+        {isLogin && (
+          <NavLink to={`/community`}>
+            <li>Community</li>
+          </NavLink>
+        )}
         <li className="hover:text-blue-500 transition-all duration-300 ease-in-out cursor-pointer">
           <NavLink to="/about">About Us</NavLink>
         </li>

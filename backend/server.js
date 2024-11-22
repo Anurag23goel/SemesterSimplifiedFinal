@@ -9,6 +9,10 @@ const cookieParser = require("cookie-parser");
 
 // Import Socket.IO and HTTP
 const app = express();
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static("build")); // Serve frontend build in production
+}
+
 const { Server } = require("socket.io");
 const http = require("http");
 
@@ -16,13 +20,7 @@ const http = require("http");
 const socketHandler = require("./socket/socketHandler");
 
 // CORS Configuration
-const allowedOrigins = [
-  "http://localhost:3000",
-  "http://192.168.1.10:3000",
-  "http://localhost:3001",
-  "https://semester-simplified-front.vercel.app",
-  "https://semester-simplified-backend.onrender.com",
-];
+const allowedOrigins = ["http://localhost:3000", "http://192.168.1.10:3000"];
 
 app.use(
   cors({
@@ -42,12 +40,19 @@ app.use(express.json());
 
 app.use(cookieParser());
 app.use((req, res, next) => {
-  res.cookie("yourCookieName", "cookieValue", {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "none",
-    maxAge: 24 * 60 * 60 * 1000,
-  });
+  // Default cookie options
+  res.setCookie = (name, value, options = {}) => {
+    const defaultOptions = {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production", // Use HTTPS in production
+      sameSite: "None", // Allow cross-origin cookies
+      maxAge: 24 * 60 * 60 * 1000, // 1 day
+    };
+    // Merge default options with specific options
+    const finalOptions = { ...defaultOptions, ...options };
+    res.cookie(name, value, finalOptions);
+  };
+
   next();
 });
 

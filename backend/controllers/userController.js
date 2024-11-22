@@ -79,13 +79,15 @@ const loginUser = async (req, res) => {
 
       const token = jwt.sign(payload, process.env.JWT_SECRET, {
         expiresIn: rememberMe ? "7d" : "1h", // Token expiry based on "Remember Me"
-      });
+      });      
 
       const options = {
-        httpOnly: true,  // Prevent client-side access to the cookie
-        secure: process.env.NODE_ENV === "production", // Only set secure cookies in production (over HTTPS)
-        sameSite: "None", // Needed for cross-origin requests (important for frontend deployment)
-        maxAge: 7 * 24 * 60 * 60 * 1000, // 1 week expiration
+        expires: new Date(
+          Date.now() + (rememberMe ? 7 * 24 * 60 * 60 * 1000 : 60 * 60 * 1000)
+        ),
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production", // Use HTTPS in production
+        sameSite: "None", // Allow cross-origin cookies
       };
 
       res.cookie("userToken", token, options);
@@ -116,7 +118,7 @@ const getUserInfo = async (req, res) => {
         university: myselfUser.university,
         uploads: myselfUser.materialUploaded,
         connections: myselfUser.connections,
-        avatar: myselfUser.profilePicture
+        avatar: myselfUser.profilePicture,
       },
     });
   } catch (error) {
