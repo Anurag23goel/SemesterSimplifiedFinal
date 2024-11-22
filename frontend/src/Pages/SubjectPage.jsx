@@ -6,7 +6,6 @@ import { UniversitiesList } from "../assets/UniversitiesList";
 import { FaBook } from "react-icons/fa";
 import axios from "axios";
 import { data } from "../assets/Suggestions";
-import Cookies from "js-cookie";
 import { Toaster } from "react-hot-toast";
 import Dialog from "@mui/material/Dialog"; // Material UI Dialog component
 import LoginForm from "../Components/LoginForm"; // Assuming you have a LoginForm component
@@ -54,11 +53,13 @@ const SubjectPage = () => {
         {
           params: { course, subject },
           withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("userToken")}`, // Send token in Authorization header
+          },
         }
       );
 
       console.log(response.data);
-      
 
       setAllData(response.data); // Store all documents
       setDataToRender(response.data); // Initially render all documents
@@ -80,7 +81,7 @@ const SubjectPage = () => {
   };
 
   const handleOpenPdf = (url) => {
-    const user = Cookies.get("userid");
+    const user = localStorage.getItem("userId");
     if (user) {
       window.open(url, "_blank", "noopener,noreferrer");
     } else {

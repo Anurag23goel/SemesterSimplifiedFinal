@@ -10,7 +10,12 @@ const UserProfilePage = () => {
     try {
       const response = await axios.get(
         `${process.env.REACT_APP_BACKEND_URL}api/v1/user/getRequestedUserInfo/${userId}`,
-        { withCredentials: true }
+        {
+          withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("userToken")}`, // Send token in Authorization header
+          },
+        }
       );
       setUserDetails(response.data.requestedUser); // Store fetched user details
     } catch (error) {

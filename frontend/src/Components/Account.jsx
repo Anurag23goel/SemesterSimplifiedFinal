@@ -53,6 +53,9 @@ const Account = ({ userDetails }) => {
         payload,
         {
           withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("userToken")}`, // Send token in Authorization header
+          },
         }
       );
 

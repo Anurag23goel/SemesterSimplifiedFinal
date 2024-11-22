@@ -1,12 +1,11 @@
 import React, { useEffect } from "react";
 import LoginForm from "../Components/LoginForm";
 import mainLogo from "../assets/mainlogo.jpeg";
-import Cookies from "js-cookie";
 
 const LoginPage = () => {
 
   useEffect(() => {
-    const token = Cookies.get("userToken");
+    const token = localStorage.getItem("userToken");
     if (token) {
       window.location.href = "/";
     }

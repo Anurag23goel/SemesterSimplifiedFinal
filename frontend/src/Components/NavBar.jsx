@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom"; // Import useNavigate
-import Cookies from "js-cookie";
 
 const NavBar = () => {
   const [isLogin, setIsLogin] = useState(false);
   const navigate = useNavigate(); // Initialize useNavigate
 
-  const userID = Cookies.get("userid");
+  const userID = localStorage.getItem("userId");
+  const userToken = localStorage.getItem("userToken");
 
   useEffect(() => {
-    const userToken = Cookies.get("userToken");
     if (userToken) {
       setIsLogin(true);
     } else {
@@ -18,8 +17,8 @@ const NavBar = () => {
   }, []);
 
   const handleLogout = () => {
-    Cookies.remove("userToken"); // Remove the token cookie
-    Cookies.remove("userid");
+    localStorage.removeItem("userId");
+    localStorage.removeItem("userToken");
     setIsLogin(false); // Update the login state
     navigate("/"); // Redirect to home page after logging out
   };

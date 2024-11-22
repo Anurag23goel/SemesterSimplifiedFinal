@@ -8,7 +8,12 @@ const SentRequestsPage = () => {
     try {
       const res = await axios.get(
         `${process.env.REACT_APP_BACKEND_URL}api/v1/user/getAllRequests`,
-        { withCredentials: true }
+        {
+          withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("userToken")}`, // Send token in Authorization header
+          },
+        }
       );
       setOutgoingRequests(res.data.outgoingReq);
       console.log(res.data.outgoingReq);

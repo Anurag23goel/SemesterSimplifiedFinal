@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 
-const UpdateProfilePic = ({closeModal}) => {
+const UpdateProfilePic = ({ closeModal }) => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [preview, setPreview] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
@@ -38,10 +38,11 @@ const UpdateProfilePic = ({closeModal}) => {
         `${process.env.REACT_APP_BACKEND_URL}api/v1/user/addAvatar`,
         formData,
         {
+          withCredentials: true, // If you're using cookies for auth
           headers: {
             "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${localStorage.getItem("userToken")}`, // Send token in Authorization header
           },
-          withCredentials: true, // If you're using cookies for auth
         }
       );
 

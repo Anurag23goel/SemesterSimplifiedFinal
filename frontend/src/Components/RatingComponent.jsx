@@ -4,8 +4,7 @@ import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar as solidStar } from "@fortawesome/free-solid-svg-icons";
 import { faStar as regularStar } from "@fortawesome/free-regular-svg-icons";
-import Cookies from 'js-cookie'
-import toast from 'react-hot-toast'
+import toast from "react-hot-toast";
 
 const RatingComponent = ({
   documentId,
@@ -20,18 +19,23 @@ const RatingComponent = ({
   const handleRatingSubmit = async (newRating) => {
     if (newRating === 0) return; // Prevent submitting a rating of 0
 
-    const userID = Cookies.get('userid')
+    const userID = localStorage.getItem("userId");
 
-    if(!userID){
-      toast.error("You Must Login To Rate")
-      return
+    if (!userID) {
+      toast.error("You Must Login To Rate");
+      return;
     }
 
     try {
       const response = await axios.post(
         `${process.env.REACT_APP_BACKEND_URL}api/v1/documents/${documentId}/rate`,
         { rating: newRating },
-        { withCredentials: true }
+        {
+          withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("userToken")}`, // Send token in Authorization header
+          },
+        }
       );
       const updatedDocument = response.data;
       setAverage(updatedDocument.averageRating);

@@ -79,7 +79,7 @@ const loginUser = async (req, res) => {
 
       const token = jwt.sign(payload, process.env.JWT_SECRET, {
         expiresIn: rememberMe ? "7d" : "1h", // Token expiry based on "Remember Me"
-      });      
+      });
 
       const options = {
         expires: new Date(
@@ -90,9 +90,10 @@ const loginUser = async (req, res) => {
         sameSite: "None", // Allow cross-origin cookies
       };
 
-      res.cookie("userToken", token, options);
-      res.cookie("userid", user.id, options);
-      res.status(200).json({ status: "ok", message: "Login successful." });
+      // res.cookie("userToken", token, options);
+      // res.cookie("userid", user.id, options);
+      
+      res.status(200).json({ status: "ok", message: "Login successful", userToken: token, userId: user.id });
     } else {
       res.status(401).json({ message: "Incorrect password." });
     }

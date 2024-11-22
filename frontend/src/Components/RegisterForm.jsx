@@ -48,6 +48,11 @@ const RegisterForm = () => {
           name: formData.name,
           email: formData.email,
           password: formData.password,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("userToken")}`, // Send token in Authorization header
+          },
         }
       );
       if (res.data.status === "ok") {

@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
 import io from "socket.io-client";
 import axios from "axios";
-import Cookies from "js-cookie";
 import ChatWindow from "../Components/ChatWindow";
 import avatar from "../assets/icons8-video-chat-40.png"; // Placeholder avatar
 
 const ChatPage = () => {
-  const loggedInUserId = Cookies.get("userid");
+  const loggedInUserId = localStorage.getItem("userId");
   const [users, setUsers] = useState([]);
   const [currentChatPartner, setCurrentChatPartner] = useState(null);
   const [socket, setSocket] = useState(null);
@@ -24,7 +23,7 @@ const ChatPage = () => {
   };
 
   useEffect(() => {
-    const token = Cookies.get("userToken");
+    const token = localStorage.getItem("userToken");
     if (!token) {
       window.location.href = "/";
     }
@@ -33,7 +32,7 @@ const ChatPage = () => {
   
   
   useEffect(() => {
-    const token = Cookies.get("userToken");
+    const token = localStorage.getItem("userToken");
     if (loggedInUserId || token) {
       const newSocket = io("http://localhost:5000", {
         query: { token: token },

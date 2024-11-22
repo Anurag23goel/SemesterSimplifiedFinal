@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import UpdateProfilePic from "./UpdateProfilePic"; // Import the component
 import { IoClose } from "react-icons/io5";
@@ -9,8 +8,8 @@ const SidePanel = ({ activeTab, setActiveTab, userDetails }) => {
   const [isModalOpen, setIsModalOpen] = useState(false); // State for modal
 
   const handleLogout = () => {
-    Cookies.remove("userToken");
-    Cookies.remove("userid");
+    localStorage.removeItem("userId");
+    localStorage.removeItem("userToken");
     navigate("/");
   };
 

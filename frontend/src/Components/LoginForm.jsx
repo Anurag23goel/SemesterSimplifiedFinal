@@ -32,10 +32,17 @@ const LoginForm = ({ onClose, onLoginSuccess }) => {
         password: formData.password,
         rememberMe: formData.rememberMe,
       },
-      { withCredentials: true }
+      {
+        withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("userToken")}`, // Send token in Authorization header
+        },
+      }
     );
 
     if (res.data.status === "ok") {
+      localStorage.setItem("userToken", res.data.userToken);
+      localStorage.setItem("userId", res.data.userId);
       toast.success("Login Successfull");
       navigate("/");
     } else {

@@ -1,11 +1,10 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import Cookies from "js-cookie";
 import { NavLink } from "react-router-dom";
 
 const CommunityPage = () => {
-  const token = Cookies.get("userToken");
+  const token = localStorage.getItem("userToken");
 
   const [allUsers, setAllUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -20,6 +19,9 @@ const CommunityPage = () => {
         `${process.env.REACT_APP_BACKEND_URL}api/v1/user/getAllUsers`,
         {
           withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("userToken")}`, // Send token in Authorization header
+          },
         }
       );
       setAllUsers(res.data);
@@ -44,8 +46,12 @@ const CommunityPage = () => {
     try {
       const response = await axios.post(
         `${process.env.REACT_APP_BACKEND_URL}api/v1/user/sendConnection?user=${userId}`,
-        {},
-        { withCredentials: true }
+        {
+          withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("userToken")}`, // Send token in Authorization header
+          },
+        }
       );
       if (response.data.status === "ok") {
         toast.success("Connection Request Sent!");

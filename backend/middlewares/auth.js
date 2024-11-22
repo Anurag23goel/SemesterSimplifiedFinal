@@ -2,7 +2,13 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
 exports.authentication = async (req, res, next) => {
-  const token = req.cookies.userToken;
+  // Extract token from Authorization header or cookies
+  const authHeader = req.headers.authorization;
+  console.log(authHeader);
+  
+  const token = authHeader && authHeader.startsWith("Bearer ")
+    ? authHeader.split(" ")[1] // Extract token after "Bearer "
+    : req.cookies.userToken;
 
   // Check if the token is present
   if (!token) {
@@ -27,3 +33,5 @@ exports.authentication = async (req, res, next) => {
     });
   }
 };
+
+

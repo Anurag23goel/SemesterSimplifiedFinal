@@ -10,7 +10,7 @@ const ChatWindow = ({ currentChatPartner, loggedInUserId, socket }) => {
     try {
       const response = await axios.get(
         `${process.env.REACT_APP_BACKEND_URL}api/v1/chat/private/${loggedInUserId}/${currentChatPartner._id}`,
-        { withCredentials: true }
+        { withCredentials: true },
       );
       setMessages(response.data);
     } catch (error) {

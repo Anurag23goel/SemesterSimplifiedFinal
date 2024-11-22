@@ -2,18 +2,13 @@ import React, { useEffect } from "react";
 import RegisterForm from "../Components/RegisterForm";
 import mainLogo from "../assets/mainlogo.jpeg";
 
-import Cookies from "js-cookie";
-
 const RegisterPage = () => {
-  
-  
   useEffect(() => {
-    const token = Cookies.get("userToken");
+    const token = localStorage.getItem("userToken");
     if (token) {
       window.location.href = "/";
     }
   }, []);
-
 
   return (
     <div className="min-h-screen flex flex-col overflow-hidden">

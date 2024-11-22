@@ -5,13 +5,12 @@ import MyUploadsPage from "../Pages/UploadsPage";
 import ConnectionsPage from "../Pages/ConnectionsPage";
 import SidePanel from "../Components/SidePanel";
 import { Navigate } from "react-router-dom";
-import Cookies from "js-cookie";
 import SentRequestsPage from "../Pages/SentRequestsPage";
 import IncomingRequestsPage from "../Pages/IncomingRequestsPage";
 
 const DashboardPage = () => {
+  const token = localStorage.getItem("userId");
   useEffect(() => {
-    const token = Cookies.get("userToken");
     if (!token) {
       window.location.href = "/";
     }
@@ -27,9 +26,14 @@ const DashboardPage = () => {
   });
 
   const userData = async () => {
-    const res = await axios.get(`${process.env.REACT_APP_BACKEND_URL}api/v1/user/getInfo`, {
-      withCredentials: true,
-    });
+    const res = await axios.get(
+      `${process.env.REACT_APP_BACKEND_URL}api/v1/user/getInfo`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("userToken")}`, // Send token in Authorization header
+        },
+      }
+    );
 
     const userDetails = res.data.user;
 
@@ -50,7 +54,7 @@ const DashboardPage = () => {
       case "Community":
         return <Navigate to="/community" />; // Redirect to home page
       case "Account":
-        return <Account userDetails={userDetails} />;
+        return <Account userDetails={userDetails} token={token} />;
       case "My Uploads":
         return <MyUploadsPage userDetails={userDetails} />;
       case "Connections":

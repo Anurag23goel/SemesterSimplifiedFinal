@@ -39,22 +39,6 @@ app.use(
 app.use(express.json());
 
 app.use(cookieParser());
-app.use((req, res, next) => {
-  // Default cookie options
-  res.setCookie = (name, value, options = {}) => {
-    const defaultOptions = {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production", // Use HTTPS in production
-      sameSite: "None", // Allow cross-origin cookies
-      maxAge: 24 * 60 * 60 * 1000, // 1 day
-    };
-    // Merge default options with specific options
-    const finalOptions = { ...defaultOptions, ...options };
-    res.cookie(name, value, finalOptions);
-  };
-
-  next();
-});
 
 const fileUpload = require("express-fileupload");
 app.use(

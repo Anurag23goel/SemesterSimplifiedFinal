@@ -6,14 +6,13 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { data } from "../assets/Suggestions";
 import { UniversitiesList } from "../assets/UniversitiesList";
-import Cookies from "js-cookie";
 
 const UploadFileComponent = ({ setIsModalOpen }) => {
   const [file, setFile] = useState(null);
   const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
-    const token = Cookies.get("userToken");
+    const token = localStorage.getItem("userToken");
     if (!token) {
       window.location.href = "/";
     }
@@ -83,7 +82,13 @@ const UploadFileComponent = ({ setIsModalOpen }) => {
           ...formData,
           url: downloadURL,
         },
-        { withCredentials: true }
+        {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("userToken")}`, // Send token in Authorization header
+          },
+        }
       );
 
       if (res.data.status === "success") {

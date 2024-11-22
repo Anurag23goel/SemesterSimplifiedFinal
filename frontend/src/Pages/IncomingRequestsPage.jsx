@@ -3,14 +3,18 @@ import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify"; // Assuming you're using react-toastify for notifications
 
 const IncomingRequestsPage = () => {
-  
   const [incomingRequests, setIncomingRequests] = useState([]);
 
   const fetchIncomingRequests = async () => {
     try {
       const res = await axios.get(
         `${process.env.REACT_APP_BACKEND_URL}api/v1/user/getAllRequests`,
-        { withCredentials: true }
+        {
+          withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("userToken")}`, // Send token in Authorization header
+          },
+        }
       );
       setIncomingRequests(res.data.incomingReq);
     } catch (error) {
@@ -22,8 +26,12 @@ const IncomingRequestsPage = () => {
     try {
       const res = await axios.post(
         `${process.env.REACT_APP_BACKEND_URL}/api/v1/user/acceptRequest?requestId=${requestId}`,
-        {},
-        { withCredentials: true }
+        {
+          withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("userToken")}`, // Send token in Authorization header
+          },
+        }
       );
       if (res.data.status) {
         toast.success("Request accepted!");
@@ -40,8 +48,12 @@ const IncomingRequestsPage = () => {
     try {
       const res = await axios.post(
         `${process.env.REACT_APP_BACKEND_URL}api/v1/user/declineRequest?requestId=${requestId}`,
-        {},
-        { withCredentials: true }
+        {
+          withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("userToken")}`, // Send token in Authorization header
+          },
+        }
       );
       if (res.data.status) {
         toast.success("Request declined!");
