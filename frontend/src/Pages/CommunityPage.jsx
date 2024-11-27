@@ -46,8 +46,9 @@ const CommunityPage = () => {
     try {
       const response = await axios.post(
         `${process.env.REACT_APP_BACKEND_URL}api/v1/user/sendConnection?user=${userId}`,
+        {}, // Empty body object if no data needs to be sent in the body
         {
-          withCredentials: true,
+          withCredentials: true, // Should be here, not in the body
           headers: {
             Authorization: `Bearer ${localStorage.getItem("userToken")}`, // Send token in Authorization header
           },

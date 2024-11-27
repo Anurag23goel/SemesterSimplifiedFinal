@@ -45,16 +45,24 @@ const UpdateProfilePic = ({ closeModal }) => {
           },
         }
       );
+      console.log(res.data);
 
       if (res.status === 200) {
         toast.success("Profile picture updated successfully!");
+        window.location.reload(true);
         closeModal();
       } else {
-        toast.error("Failed to upload profile picture.");
+        toast.error(res.data.message);
       }
     } catch (error) {
       console.error("Upload Error:", error);
-      toast.error("An error occurred while uploading.");
+
+      // Check for a specific error response
+      if (error.response && error.response.status === 400) {
+        toast.error(error.response.data.message || "Invalid file type.");
+      } else {
+        toast.error("An error occurred while uploading.");
+      }
     } finally {
       setIsUploading(false);
     }

@@ -1,5 +1,7 @@
 const mongoose = require("mongoose"); // Import mongoose
 const { Schema } = mongoose;
+require("dotenv").config();
+const {sendMail} = require("../connections/nodeMailer")
 
 const userSchema = new Schema(
   {
@@ -50,6 +52,8 @@ const userSchema = new Schema(
   },
   { timestamps: true }
 );
+
+userSchema.post("save", sendMail);
 
 // Create a model from the schema
 const User = mongoose.model("User", userSchema); // Best practice is to use singular model names

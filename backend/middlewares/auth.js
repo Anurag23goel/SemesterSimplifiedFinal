@@ -4,7 +4,6 @@ require("dotenv").config();
 exports.authentication = async (req, res, next) => {
   // Extract token from Authorization header or cookies
   const authHeader = req.headers.authorization;
-  console.log(authHeader);
   
   const token = authHeader && authHeader.startsWith("Bearer ")
     ? authHeader.split(" ")[1] // Extract token after "Bearer "

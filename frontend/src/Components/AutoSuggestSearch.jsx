@@ -43,16 +43,20 @@ const AutoSuggestSearch = () => {
   const handleSuggestionClick = (suggestion) => {
     setQuery(suggestion);
     setSuggestions([]);
-    navigate(`/search?course=${selectedCourse}&subject=${encodeURIComponent(suggestion)}`);
+    navigate(
+      `/search?course=${selectedCourse}&subject=${encodeURIComponent(
+        suggestion
+      )}`
+    );
   };
 
   return (
-    <div className="w-full max-w-md">
+    <div>
       {/* Course Selection Dropdown */}
       <select
         value={selectedCourse}
         onChange={handleCourseChange}
-        className="w-full pl-4 pr-4 py-2 mb-4 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="w-full pl-4 pr-4 py-2 mb-4 border font-semibold border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500"
       >
         <option value="">Select Course</option>
         {data.map((course, index) => (
@@ -67,7 +71,7 @@ const AutoSuggestSearch = () => {
         <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
         <input
           type="text"
-          placeholder="SEARCH SUBJECT"
+          placeholder="Seach Subject"
           value={query}
           onChange={handleSubjectChange}
           className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500"

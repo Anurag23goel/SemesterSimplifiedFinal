@@ -90,10 +90,12 @@ const loginUser = async (req, res) => {
         sameSite: "None", // Allow cross-origin cookies
       };
 
-      // res.cookie("userToken", token, options);
-      // res.cookie("userid", user.id, options);
-      
-      res.status(200).json({ status: "ok", message: "Login successful", userToken: token, userId: user.id });
+      res.status(200).json({
+        status: "ok",
+        message: "Login successful",
+        userToken: token,
+        userId: user.id,
+      });
     } else {
       res.status(401).json({ message: "Incorrect password." });
     }
@@ -353,11 +355,24 @@ const declineConnectionRequest = async (req, res) => {
 };
 
 const uploadAvatar = async (req, res) => {
-  const file = req.files.file;
+  const file = req.files?.file; // Safely access the file object
+
+  if (!file) {
+    return res.status(400).json({ message: "No file uploaded" });
+  }
+
+  const supportedFormats = ["jpg", "jpeg", "png"];
+  const fileType = file.name.split(".").pop().toLowerCase();
 
   try {
+    if (!supportedFormats.includes(fileType)) {
+      return res.status(400).json({
+        message: "Invalid File Type",
+      });
+    }
+
     // Construct the file path with correct extension
-    const path = `./tempUploads/${Date.now()}.${file.name.split(".").pop()}`;
+    const path = `./tempUploads/${Date.now()}.${fileType}`;
 
     // Move the file to the path
     await file.mv(path);
@@ -369,11 +384,7 @@ const uploadAvatar = async (req, res) => {
     });
 
     // Remove file from local uploads folder
-    fs.unlinkSync(path, (err) => {
-      if (err) {
-        console.error("Failed to delete local file:", err);
-      }
-    });
+    fs.unlinkSync(path);
 
     // Update user in the database with the new profile picture URL
     const user = await User.findByIdAndUpdate(
@@ -383,13 +394,13 @@ const uploadAvatar = async (req, res) => {
     );
 
     // Send response
-    res.status(200).json({
+    return res.status(200).json({
       message: "Avatar uploaded successfully",
       user,
     });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Server error" });
+    console.error("Error during avatar upload:", error);
+    return res.status(500).json({ message: "Server error" });
   }
 };
 
